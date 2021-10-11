@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% from "_error_form_message.html" import error %}
+
+{% block page_content %}
+<div class="col-xl-4 col-lg-4 col-md-5 col-sm-12 mx-auto">
+    <h5 class="mb-3 mt-4 text-center">Авторизация</h5>
+    <form class="row g-4" method="post" >
+        {{ login_form.hidden_tag() }}
+        {{ login_form.email(class_="form-control", placeholder="Почта") }}
+        {{ error(login_form.email) }}
+        {{ login_form.password(class_="form-control", placeholder="Пароль") }}
+        {{ error(login_form.password) }}
+        <p class="px-0 mb-0">{{ login_form.remember_me(class_="form-check-input") }} Запомнить меня</p>
+        <hr class="mb-0">
+        <div class="d-flex justify-content-between px-0 align-middle">
+            {{ login_form.submit(class_="btn btn-primary px-3") }}
+            <a class="link-dark" href="{{ url_for('auth.password_reset_request') }}">Забыли пароль?</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

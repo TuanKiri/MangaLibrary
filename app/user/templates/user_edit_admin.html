@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% from "_error_form_message.html" import error %}
+
+{% block page_content %}
+<div class="col-xl-4 col-lg-4 col-md-5 col-sm-12 mx-auto">
+    <h5 class="mb-3 mt-4 text-center">Редактировать профиль [Admin]</h5>
+    <form class="row g-4" method="POST" enctype="multipart/form-data" >
+        {{ edit_profile_admin_form.hidden_tag() }}
+        <label for="formFile" class="form-label px-0">Выберите аватарку</label>
+        {{ edit_profile_admin_form.avatar(class_="form-control mt-0") }}
+        {{ error(edit_profile_admin_form.avatar) }}
+        {% if user.avatar %}
+        <label for="formFile" class="form-label p-0 my-1">{{user.avatar}}</label>
+        {% endif %}
+        <label for="formFile" class="form-label px-0">Выберите заставку</label>
+        {{ edit_profile_admin_form.background(class_="form-control mt-0") }}
+        {{ error(edit_profile_admin_form.background) }}
+        {% if user.background %}
+        <label for="formFile" class="form-label p-0 my-1">{{current_user.background}}</label>
+        {% endif %}
+        {{ edit_profile_admin_form.email(class_="form-control", placeholder="Почта") }}
+        {{ error(edit_profile_admin_form.email) }}
+        <div class="form-check form-switch">
+            {{ edit_profile_admin_form.confirmed(class_="form-check-input") }}
+            <label class="form-check-label" for="flexSwitchCheckChecked">Подтвержден</label>
+        </div>
+        {{ edit_profile_admin_form.role(class_="form-select") }}
+        {{ edit_profile_admin_form.username(class_="form-control", placeholder="Никнейм") }}
+        {{ error(edit_profile_admin_form.username) }}
+        {{ edit_profile_admin_form.location(class_="form-control", placeholder="Место проживания") }}
+        {{ error(edit_profile_admin_form.location) }}
+        {{ edit_profile_admin_form.name(class_="form-control", placeholder="Имя") }}
+        {{ error(edit_profile_admin_form.name) }}
+        {{ edit_profile_admin_form.site(class_="form-control", placeholder="Сайт:  https://example.com/username") }}
+        {{ error(edit_profile_admin_form.site) }}
+        {{ edit_profile_admin_form.about_me(class_="form-control", placeholder="О себе") }}
+        {{ error(edit_profile_admin_form.about_me) }}
+        <hr class="mb-0">
+        <div class="d-flex justify-content-center">
+            {{ edit_profile_admin_form.submit(class_="btn btn-primary px-3") }}
+        </div>
+    </form>
+</div>
+{% endblock %}

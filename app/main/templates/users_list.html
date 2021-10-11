@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macros %}
+
+{% block page_content %}
+<form class="d-flex" method="get">
+    {{ search_form.search(placeholder="Поиск пользователей",class_="form-control me-2") }}
+    {{ search_form.submit(class_="btn btn-primary") }}
+</form>
+<h5 class="mb-3 mt-4">Все пользователи</h5>
+
+{% include '_users.html' %}
+
+{% if pagination and pagination.pages > 1 %}
+{{ macros.pagination_widget(pagination, '.users_list') }}
+{% endif %}
+
+{% endblock %}

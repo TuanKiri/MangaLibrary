@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macros %}
+
+{% block page_content %}
+<h5 class="mb-3 mt-4">Все новости</h5>
+<div class="news-list list-group">
+    {% include '_news.html' %}
+</div>
+
+{% if pagination and pagination.pages > 1 %}
+{{ macros.pagination_widget(pagination, '.news_list') }}
+{% endif %}
+
+{% endblock %}

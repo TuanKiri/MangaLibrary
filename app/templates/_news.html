@@ -1,0 +1,14 @@
+{% for item in pagination.items %}
+    <a href="{{ url_for('news.index', title = item.title) }}" class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ item.title }}</h5>
+            <small class="text-muted">{{ moment(item.timestamp).fromNow() }}</small>
+        </div>
+        <small class="text-muted d-flex align-items-center">
+            <svg class="me-1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+            </svg>
+            {{ item.user.username }}
+        </small>
+    </a>
+{% endfor %}

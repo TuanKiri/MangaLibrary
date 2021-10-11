@@ -1,0 +1,9 @@
+{% macro error(field) %}
+  {% if field.errors %}
+    <ul class="m-0 px-0">
+    {% for error in field.errors %}
+      <small class="text-danger">{{ error }}</small>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endmacro %}

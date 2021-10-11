@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% from "_error_form_message.html" import error %}
+
+{% block page_content %}
+<div class="col-xl-4 col-lg-4 col-md-5 col-sm-12 mx-auto">
+    <h5 class="mb-3 mt-4 text-center">Регистрация</h5>
+    <form class="row g-4" method="post" >
+        {{ registration_form.hidden_tag() }}
+        {{ registration_form.email(class_="form-control", placeholder="Почта") }}
+        {{ error(registration_form.email) }}
+        {{ registration_form.username(class_="form-control", placeholder="Никнейм") }}
+        {{ error(registration_form.username) }}
+        {{ registration_form.password(class_="form-control", placeholder="Пароль") }}
+        {{ registration_form.password2(class_="form-control", placeholder="Повторите пароль") }}
+        {{ error(registration_form.password) }}
+        <hr class="mb-0">
+        <div class="d-flex justify-content-center">
+            {{ registration_form.submit(class_="btn btn-primary px-3") }}
+        </div>
+    </form>
+</div>
+{% endblock %}

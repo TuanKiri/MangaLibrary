@@ -1,0 +1,7 @@
+<p>Добро пожаловать на <b>MangaLibrary</b>!</p>
+<p>Для подтверждения аккаунта на сайте <a href="{{ url_for('auth.confirm', token=token, _external=True) }}">нажмите сюда</a>.</p>
+<p>Или можете скопировать следующую ссылку в адресную строку браузера:</p>
+<p>{{ url_for('auth.confirm', token=token, _external=True) }}</p>
+<p>С уважением,</p>
+<p>команда MangaLibrary</p>
+<p><small>Примечание: сообщения отправленные на данную почту не отслеживаются.</small></p>

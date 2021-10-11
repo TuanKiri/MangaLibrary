@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+<h5 class="mb-3 mt-4 text-center">{{ news.title }}</h5>
+{{ news.body }}
+<div class="d-flex flex-column align-items-center my-2">
+    {% for image in news.image_url() %}
+        <img class="page-img" src="{{ image }}" alt="...">
+    {% endfor %}
+</div>
+<div class="d-flex justify-content-between align-items-center">
+    <small class="text-muted d-flex align-items-center">
+        <svg class="me-1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+          <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+        </svg>
+        {{ news.user.username }}
+    </small>
+    <small class="text-muted">{{ moment(news.timestamp).fromNow() }}</small>
+</div>
+<h6 class="mb-3 mt-4">Комментарии:</h6>
+{% if current_user.is_authenticated %}
+<form action="{{ url_for('comment.add_news_comment', title=news.title) }}" method="post">
+    {{ comment_form.hidden_tag() }}
+    {{ comment_form.comment(class_="form-control", placeholder="Комментарий") }}
+    <div class="d-flex justify-content-end my-2">
+        {{ comment_form.submit(class_="btn btn-primary px-3") }}
+    </div>
+</form>
+{% endif %}
+{% include '_comments.html' %}
+
+{% if pagination and pagination.pages > 1 %}
+{{ macros.pagination_widget(pagination, '.index', title=news.title) }}
+{% endif %}
+{% endblock %}

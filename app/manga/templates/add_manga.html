@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% from "_error_form_message.html" import error %}
+
+{% block page_content %}
+<div class="col-xl-4 col-lg-4 col-md-5 col-sm-12 mx-auto">
+    <h5 class="mb-3 mt-4 text-center">Создание манги</h5>
+    <form class="row g-4" method="POST" enctype="multipart/form-data" >
+        {{ edit_manga_form.hidden_tag() }}
+        <label for="formFile" class="form-label px-0">Выберите обложку</label>
+        {{ edit_manga_form.image(class_="form-control mt-0") }}
+        {{ error(edit_manga_form.image) }}
+        {% if manga %}
+            {% if manga.image %}
+                <label for="formFile" class="form-label p-0 my-1">{{manga.image}}</label>
+            {% endif %}
+        {% endif %}
+        {{ edit_manga_form.title(class_="form-control", placeholder="Название") }}
+        {{ error(edit_manga_form.title) }}
+        {{ edit_manga_form.author(class_="form-control", placeholder="Автор") }}
+        {{ error(edit_manga_form.author) }}
+        {{ edit_manga_form.tags(class_="form-control", placeholder="Теги через запятую") }}
+        {{ error(edit_manga_form.tags) }}
+        {{ edit_manga_form.catalog(class_="form-control", placeholder="Описание") }}
+        {{ error(edit_manga_form.catalog) }}
+        <hr class="mb-0">
+        <div class="d-flex justify-content-center">
+            {{ edit_manga_form.submit(class_="btn btn-primary px-3") }}
+        </div>
+    </form>
+</div>
+{% endblock %}

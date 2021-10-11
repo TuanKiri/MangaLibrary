@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macros %}
+
+{% block page_content %}
+<h5 class="mb-3 mt-4">Модерация комментариев</h5>
+{% set moderate = True %}
+{% include '_comments.html' %}
+{% if pagination and pagination.pages > 1 %}
+    {{ macros.pagination_widget(pagination, '.moderate') }}
+{% endif %}
+{% endblock %}

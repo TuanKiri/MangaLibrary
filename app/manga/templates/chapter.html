@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macros %}
+
+{% block page_content %}
+
+{% set item = pagination.items[0] %}
+{% set chapters = manga.chapter.all() %}
+
+<div class="text-center">
+  <a href="{{ url_for('manga.index', title = manga.title) }}">На страницу с мангой</a>
+</div>
+
+<div class="d-flex my-2 justify-content-center">
+  <ul class="pagination justify-content-center mt-2">
+    <li {% if not pagination.has_prev %} class="page-item disabled" {% endif %}>
+        <a class="page-link" href="{% if pagination.has_prev %}{% set prev = pagination.prev().items[0]  %}{{ url_for('manga.chapter', title = manga.title, volume = prev.volume, chapter = prev.chapter) }}{% else %}#{% endif %}">
+            Предыдущая
+        </a>
+    </li>
+    <select class="select form-select" onchange="location = this.value;" aria-label="Default select example">
+      {% for chapter in chapters %}
+        <option value="{{ url_for('manga.chapter', title = manga.title, volume = chapter.volume, chapter = chapter.chapter) }}" {% if item.volume == chapter.volume and item.chapter == chapter.chapter  %} selected {% endif %}>Том {{ chapter.volume }} Глава {{ chapter.chapter }} {{ chapter.title}}</option>
+      {% endfor %}
+    </select>
+    <li {% if not pagination.has_next %} class="page-item disabled" {% endif %}>
+      <a class="page-link" href="{% if pagination.has_next %}{% set next = pagination.next().items[0]  %}{{ url_for('manga.chapter', title = manga.title, volume = next.volume, chapter = next.chapter) }}{% else %}#{% endif %}">
+          Следующая
+      </a>
+    </li>
+  </ul>
+</div>
+
+{% for image in item.image_url() %}
+<div class="text-center">
+      <img class="page-img" src="{{ image }}" alt="...">
+</div>
+{% endfor %}
+
+<div class="d-flex my-2 justify-content-center">
+  <ul class="pagination justify-content-center mt-4">
+    <li {% if not pagination.has_prev %} class="page-item disabled" {% endif %}>
+        <a class="page-link" href="{% if pagination.has_prev %}{% set prev = pagination.prev().items[0]  %}{{ url_for('manga.chapter', title = manga.title, volume = prev.volume, chapter = prev.chapter) }}{% else %}#{% endif %}">
+            Предыдущая
+        </a>
+    </li>
+    <select class="select form-select" onchange="location = this.value;" aria-label="Default select example">
+      {% for chapter in chapters %}
+        <option value="{{ url_for('manga.chapter', title = manga.title, volume = chapter.volume, chapter = chapter.chapter) }}" {% if item.volume == chapter.volume and item.chapter == chapter.chapter  %} selected {% endif %}>Том {{ chapter.volume }} Глава {{ chapter.chapter }} {{ chapter.title}}</option>
+      {% endfor %}
+    </select>
+    <li {% if not pagination.has_next %} class="page-item disabled" {% endif %}>
+      <a class="page-link" href="{% if pagination.has_next %}{% set next = pagination.next().items[0]  %}{{ url_for('manga.chapter', title = manga.title, volume = next.volume, chapter = next.chapter) }}{% else %}#{% endif %}">
+          Следующая
+      </a>
+    </li>
+  </ul>
+</div>
+
+<div class="text-center">
+      <a href="{{ url_for('manga.index', title = manga.title) }}">На страницу с мангой</a>
+</div>
+
+{% endblock %}

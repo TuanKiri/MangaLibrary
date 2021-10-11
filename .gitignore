@@ -1,0 +1,11 @@
+# Virtual Environments
+/env
+
+# Cache
+__pycache__/
+
+# Databases
+*.sqlite
+
+# save images
+upload

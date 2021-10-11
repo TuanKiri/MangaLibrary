@@ -1,0 +1,7 @@
+<p>Пользователь {{ user.username }},</p>
+<p>для подтверждения вашей новой почты <a href="{{ url_for('auth.change_email', token=token, _external=True) }}">нажмите сюда</a>.</p>
+<p>Или можете скопировать следующую ссылку в адресную строку браузера:</p>
+<p>{{ url_for('auth.change_email', token=token, _external=True) }}</p>
+<p>С уважением,</p>
+<p>команда MangaLibrary</p>
+<p><small>Примечание: сообщения отправленные на данную почту не отслеживаются.</small></p>

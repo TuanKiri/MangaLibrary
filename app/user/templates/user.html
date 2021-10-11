@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macros %}
+
+{% block page_content %}
+<div style="background-color: #f8f9fa;" class="row mx-0">
+    <div class="container px-0" >
+        <div class="image_title" style="background-image: url({{ user.background_url() }})">
+        </div>
+    </div>
+    <div class="d-flex justify-content-between align-items-center p-2">
+        <div class="avatar avatar-user" style="background-image: url({{ user.avatar_url() }})">
+        </div>
+        <div class="ms-3 me-auto">
+            <div class="fw-bold">{{ user.username }}
+                {% if user.is_administrator() %} 
+                    <small class="text-muted"> •</small> <small class="text-primary"> {{ user.role.name}}</small>
+                {% endif %}
+            </div>
+            <small class="text-muted">{{ moment(user.last_seen).fromNow() }}</small>
+        </div>
+        {% if current_user.can(Permission.FOLLOW) and user != current_user %}
+            {% if not current_user.is_following(user) %}
+                <a href="{{ url_for('user.follow', username = user.username) }}" type="button" class="btn btn-primary d-flex align-items-center"><svg class="me-1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+                    <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                    <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+                </svg> Подписаться</a>
+            {% else %}
+                <a href="{{ url_for('user.unfollow', username = user.username) }}" type="button" class="btn btn-danger d-flex align-items-center"> Отписаться</a>
+            {% endif %}
+            {% endif %}
+            {% if current_user.is_administrator() %}
+                <a type="button" href="{{ url_for('user.edit_profile_admin', username = user.username) }}" class="btn btn-edit-admin ms-2">Редактировать [Admin]</a>
+            {% elif user == current_user %}
+                <a type="button" href="{{ url_for('user.edit', username=current_user.username) }}" class="btn btn-subscription ms-2">Редактировать</a>
+            {% endif %}
+            <!-- <a type="button" href="#" class="btn btn-ban ms-2">Забанить</a> -->
+    </div>
+    <hr class="my-2 text-muted">
+    <p class="px-2">
+        <a class="btn btn-light d-flex align-items-center text-muted p-0 info-user" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            <small>Информация о пользователе <svg class="ms-1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+              </svg>     
+            </small>
+        </a>
+    </p>
+    <div class="collapse px-2" id="collapseExample">
+        <div class="mb-2 user-info">            
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Дата регистрации: {{ moment(user.member_since).format('L') }}</li>
+                {% if current_user.is_administrator() %}
+                <li class="list-group-item">Почта: <a href="mailto:{{ user.email }}">{{ user.email }}</a></li>
+                {% endif %}
+                {% if user.location %}
+                <li class="list-group-item">Место проживания: <a href="http://maps.google.com/?q={{ user.location }}">{{ user.location }}</a></li>
+                {% endif %}
+                {% if user.name %}
+                <li class="list-group-item">Имя: {{ user.name }}</li>
+                {% endif %}
+                {% if user.site %}
+                <li class="list-group-item">Сайт: <a href="{{ user.site }}">{{ user.site }}</a></li>
+                {% endif %}
+                {% if user.about_me %}
+                <li class="list-group-item">О себе: {{ user.about_me }}</li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="d-flex justify-content-center pt-4">
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <a type="button" class="btn btn-{% if mode == 1 %}primary{% else %}light{% endif %}" href="{{ url_for('user.index', username = user.username, show = 1) }}" >Читает</a>
+        <a type="button" class="btn btn-{% if mode == 2 %}primary{% else %}light{% endif %}" href="{{ url_for('user.index', username = user.username, show = 2) }}" >Добавил</a>
+        <a type="button" class="btn btn-{% if mode == 3 %}primary{% else %}light{% endif %}" href="{{ url_for('user.index', username = user.username, show = 3) }}" >Комментарии</a>
+        <a type="button" class="btn btn-{% if mode == 4 %}primary{% else %}light{% endif %}" href="{{ url_for('user.index', username = user.username, show = 4) }}">Друзья</a>
+      </div>
+</div>
+
+{% if mode == 1 %}
+<h5 class="mb-3 mt-4">Читает</h5>
+{% include '_manga.html' %}
+{% elif mode == 2 %}
+<h5 class="mb-3 mt-4">Добавил</h5>
+{% include '_manga.html' %}
+{% elif mode == 3 %}
+<h5 class="mb-3 mt-4">Комментарии</h5>
+{% include '_comments.html' %}
+{% elif mode == 4 %} 
+<h5 class="mb-3 mt-4">Друзья</h5>
+{% include '_users.html' %}
+{% endif %}
+
+{% if pagination and pagination.pages > 1 %}
+    {{ macros.pagination_widget(pagination, '.index', username=user.username, show=show) }}
+{% endif %}
+
+{% endblock %}

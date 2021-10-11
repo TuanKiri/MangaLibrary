@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% from "_error_form_message.html" import error %}
+
+{% block page_content %}
+<div class="col-xl-4 col-lg-4 col-md-5 col-sm-12 mx-auto">
+    <h5 class="mb-3 mt-4 text-center">Добавление главы</h5>
+    <form class="row g-4" method="POST" enctype="multipart/form-data" >
+        {{ edit_chapter_form.hidden_tag() }}
+        {{ edit_chapter_form.volume(class_="form-control", placeholder="Том") }}
+        {{ error(edit_chapter_form.volume) }}
+        {{ edit_chapter_form.chapter(class_="form-control", placeholder="Глава") }}
+        {{ error(edit_chapter_form.chapter) }}
+        {{ edit_chapter_form.title(class_="form-control", placeholder="Название") }}
+        <label for="formFileMultiple" class="form-label px-0">Выберите все картинки</label>
+        {{ edit_chapter_form.image(class_="form-control mt-0") }}
+        {{ error(edit_chapter_form.image) }}
+        <hr class="mb-0">
+        <div class="d-flex justify-content-center">
+            {{ edit_chapter_form.submit(class_="btn btn-primary px-3") }}
+        </div>
+    </form>
+</div>
+{% endblock %}

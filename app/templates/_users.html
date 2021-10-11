@@ -1,0 +1,16 @@
+{% for item in pagination.items %}
+    {% if item and item != user %}
+    <div class="d-flex justify-content-between align-items-center p-2">
+        <div class="avatar avatar-small" style="background-image: url({{ item.avatar_url() }})">
+        </div>
+        <div class="ms-3 me-auto">
+            <div class="fw-bold"><a class="link-dark" href="{{ url_for('user.index', username = item.username) }}">{{ item.username }}</a>                 
+                {% if item.is_administrator() %} 
+                    <small class="text-muted"> •</small> <small class="text-primary"> {{ item.role.name }}</small>
+                {% endif %}
+            </div>
+            <small class="text-muted">{{ moment(item.last_seen).fromNow() }}</small>
+        </div>
+    </div>
+    {% endif %}
+{% endfor %}

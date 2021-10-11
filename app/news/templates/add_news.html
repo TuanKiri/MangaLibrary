@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+<div class="col-xl-4 col-lg-4 col-md-5 col-sm-12 mx-auto">
+    <h5 class="mb-3 mt-4 text-center">Создание новости</h5>
+    <form class="row g-4" method="POST" enctype="multipart/form-data" >
+        {{ news_form.hidden_tag() }}
+        {{ news_form.title(class_="form-control", placeholder="Заголовок") }}
+        {{ news_form.news(class_="form-control", placeholder="Новость") }}
+        <label for="formFile" class="form-label px-0">Изображения к новости</label>
+        {{ news_form.image(class_="form-control mt-0") }}
+        <hr class="mb-0">
+        <div class="d-flex justify-content-center">
+            {{ news_form.submit(class_="btn btn-primary px-3") }}
+        </div>
+    </form>
+</div>
+{% endblock %}

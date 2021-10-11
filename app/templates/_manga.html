@@ -1,0 +1,23 @@
+<table class="table table-borderless">
+    {% for item in pagination.items %}
+      <tbody>
+        <tr class="d-flex">
+            <td>        
+                <img src="{{ item.image_url() }}" style="width: 150px" class="" alt="...">
+            </td>
+            <td>
+                <div class="card-body">
+                    <h5 class="card-title"><a class="link-dark" href="{{ url_for('manga.index', title = item.title) }}">{{ item.title }}</a></h5>
+                    <p class="card-text">{{ item.catalog }}</p>
+                    {% if item.tags.count() %}
+                        {% for tag in item.tags %}
+                            <a type="button" href="{{ url_for('manga.tag', name = tag.name) }}" class="btn btn-light mb-2">{{ tag.name }}</a>
+                        {% endfor %}
+                    {% endif %}
+                    <p class="card-text"><small class="text-muted">Обновлено: {{ moment(item.timestamp).fromNow() }}</small></p>
+                </div>
+            </td>
+            {% endfor %}
+        </tr>
+      </tbody>
+</table>

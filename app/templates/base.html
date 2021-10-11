@@ -1,0 +1,99 @@
+{% extends "bootstrap/base.html" %}
+{% from 'bootstrap/utils.html' import flashed_messages %}
+
+{% block title %}
+    {% if title %}
+        {{ title }} - Manga Library
+    {% else %}
+        Manga Library
+    {% endif %}
+{% endblock %}
+
+{% block styles %}
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+    <link href="{{ url_for('static',filename='css/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/main.css') }}" rel="stylesheet">
+{% endblock %}
+{% block navbar %}
+<nav class="navbar navbar-expand-md navbar-dark bg-primary">
+    <div class="container-md">
+        <a class="navbar-brand" href="{{ url_for('main.index') }}">
+            <img id="logo" src="{{ url_for('static',filename='img/logo.svg') }}" class="d-inline-block align-text-top" alt="" width="27.88" height="30">
+            MangaLibrary
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="btn btn-primary" href="{{ url_for('main.manga_list') }}">Манга</a>
+                <a class="btn btn-primary" href="{{ url_for('main.tags_list') }}">Теги</a>
+                <a class="btn btn-primary" href="{{ url_for('main.users_list') }}">Пользователи</a>
+                <a class="btn btn-primary" href="{{ url_for('main.news_list') }}">Новости</a>
+            </div>
+            <div class="navbar-nav ms-auto">
+                {% if current_user.is_authenticated %}
+                    {% if current_user.can(Permission.MODERATE) %}
+                    <a class="btn btn-primary" href="{{ url_for('comment.moderate') }}">Модерация</a>
+                    {% endif %}
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown d-flex align-items-center">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="avatar avatar-header me-2" style="background-image: url({{ current_user.avatar_url() }}) ">
+                            </div>
+                            {{ current_user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarDarkDropdownMenuLink">
+                            <li><a class="dropdown-item" href="{{ url_for('user.index', username=current_user.username) }}">Мой профиль</a></li>
+                            {% if current_user.is_administrator() %}
+                                <li><a class="dropdown-item" href="{{ url_for('news.add') }}">Добавить новость</a></li>
+                            {% endif %}
+                            <li><a class="dropdown-item" href="{{ url_for('manga.add') }}">Добавить мангу</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('auth.change_email_request') }}">Изменить почту</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('auth.change_password') }}">Измениить пароль</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Выйти</a></li>
+                        </ul>
+                        </li>
+                    </ul>
+                    {% else %}
+                        <a class="btn btn-primary mx-2" href="{{ url_for('auth.login') }}">Вход</a>
+                        <a class="btn btn-outline-light" href="{{ url_for('auth.register') }}">Регистрация</a>
+                    {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+
+<main class="container-md my-4 min-vh-100">
+    <div class="container px-0">
+        {% set message = get_flashed_messages(with_categories=True)%}
+        {% for type, message in message %}
+        <div class="alert alert-{{ type }} d-flex align-items-center justify-content-between">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% block page_content %}{% endblock %}
+</main>
+
+<footer class="footer py-3 bg-light align-bottom">
+    <div class="container-fluid text-muted d-inline-flex justify-content-center">
+        <img id="footer-logo" src="{{ url_for('static',filename='img/github.svg') }}" class="me-2" alt="" width="19" height="19">
+            <small>Created lovely by 
+                <a class="link-primary" href="https://github.com/JC5LZiy3HVfV5ux">
+                    @JC5LZiy3HVfV5ux
+                </a>
+            </small>
+      </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{{ moment.include_moment() }}
+{{ moment.lang('ru') }}
+<script src="{{ url_for('static',filename='js/bootstrap.js') }}"></script>
+{% endblock scripts %}
