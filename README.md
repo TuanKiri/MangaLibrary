@@ -37,6 +37,8 @@ python -m venv env
 
 pip install -r requirements.txt
 
+python db_create.py
+
 $env:FLASK_APP = 'run.py'   
 
 flask run   
