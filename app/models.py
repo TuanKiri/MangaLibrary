@@ -284,7 +284,7 @@ class Manga(db.Model):
     @tags_string.setter
     def tags_string(self, value):
         self.tags = []
-        tags_list = value.split(',')
+        tags_list = value.replace(' ', '').split(',')
         for str in tags_list:
             tag = Tag.query.filter(Tag.name.ilike(str)).first()
             if tag is None:
