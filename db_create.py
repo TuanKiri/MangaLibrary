@@ -3,7 +3,7 @@ import os
 from app import create_app, db
 from app.models import User, Manga, Role
 
-app = create_app(os.getenv('FLASK_CONFIG') or 'testing')
+app = create_app(os.getenv('FLASK_CONFIG') or 'development')
 
 app_ctx = app.app_context()
 app_ctx.push()
@@ -19,7 +19,7 @@ user6 = User(email="anna@mail.ru", password="anna", username="One03", name="Anna
 
 manga1 = Manga(title="Гармония", author="ITOU Keikaku", tags_string="Драма,Научная фантастика,Психология,Сёнэн,Юри")
 manga2 = Manga(title="Эврика 7: Псалмы Планет", author="BONES", tags_string="Драма,Меха,Научная фантастика,Романтика")
-manga3 = Manga(title="Всё, что тебе нужно — это убивать", author="TAKEUCHI Ryousuke", tags_string="Боевик,Драма,Психология,Сэйнэн,\
+manga3 = Manga(title="Всё, что тебе нужно — это убивать", author="TAKEUCHI Ryousuke", tags_string="Боевик,Драма,Психология,Сёнэн,\
                                                                                                     Трагедия,Фантастика,Меха,Мистика,\
                                                                                                     Романтика,Военные,Монстры,\
                                                                                                     Путешествие во времени,ГГ мужчина,Жестокий мир,\
@@ -27,7 +27,7 @@ manga3 = Manga(title="Всё, что тебе нужно — это убиват
 manga4 = Manga(title="Человек-бензопила", author="FUJIMOTO Tatsuki", tags_string="Комедия,Сверхъестественное,Трагедия,Ужасы,Фэнтези,Романтика,Боевик,\
                                                                                     Сёнэн,ГГ мужчина,Жестокий мир,Монстры,Насилие & жестокость,Зомби,\
                                                                                     Антигерой,Дружба,Огнестрельное оружие,Скрытие личности")
-manga5 = Manga(title="Ванпанчмен", author="ONE", tags_string="Боевик,Боевые искусства,Комедия,Сверхъестественное,Сэйнэн,Фантастика,Ниндзя,Самураи,\
+manga5 = Manga(title="Ванпанчмен", author="ONE", tags_string="Боевик,Боевые искусства,Комедия,Сверхъестественное,Сёнэн,Фантастика,Ниндзя,Самураи,\
                                                                 Преступники & Криминал,Лоли,Монстр Девушки,Монстры,Боги,Апокалипсис,ГГ мужчина,\
                                                                 Ранги силы,Навыки & способности,Насилие & жестокость,Пародия,Разумные расы,Роботы,\
                                                                 Спасение мира,Супергерои,Учитель & ученик,Философия,Холодное оружие,Япония,ГГ имба")
