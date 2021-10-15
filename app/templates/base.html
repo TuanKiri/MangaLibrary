@@ -48,7 +48,9 @@
                             {% if current_user.is_administrator() %}
                                 <li><a class="dropdown-item" href="{{ url_for('news.add') }}">Добавить новость</a></li>
                             {% endif %}
+                            {% if current_user.can(Permission.PUBLICATION) %}
                             <li><a class="dropdown-item" href="{{ url_for('manga.add') }}">Добавить мангу</a></li>
+                            {% endif %}
                             <li><a class="dropdown-item" href="{{ url_for('auth.change_email_request') }}">Изменить почту</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('auth.change_password') }}">Измениить пароль</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Выйти</a></li>
