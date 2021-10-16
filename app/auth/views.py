@@ -1,4 +1,4 @@
-from .. import db
+from .. import db, limiter
 from . import auth
 from ..models import User
 from ..email import send_email
@@ -17,6 +17,8 @@ def before_request():
 
 
 @auth.route('/login', methods=['GET', 'POST'])
+@limiter.limit('6/hour', methods=['POST'],
+               error_message="Вы пытаетесь войти в систему слишком много раз, повторите попытку через час.")
 def login():
     login_form = LoginForm()
     if login_form.validate_on_submit():

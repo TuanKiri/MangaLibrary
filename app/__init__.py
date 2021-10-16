@@ -6,6 +6,7 @@ from flask_bootstrap import Bootstrap
 from flask_mail import Mail
 from flask_uploads import UploadSet, IMAGES, configure_uploads
 from config import config
+from flask_limiter import Limiter
 
 db = SQLAlchemy()
 moment = Moment()
@@ -15,6 +16,7 @@ login_manager.login_view = 'auth.login'
 login_manager.login_message = "Пожалуйста, войдите на сайт, чтобы получить доступ к этой странице."
 login_manager.login_message_category = "info"
 mail = Mail()
+limiter = Limiter()
 
 users_upload = UploadSet('users', IMAGES)
 manga_upload = UploadSet('manga', IMAGES)
@@ -31,7 +33,9 @@ def create_app(config_name):
     login_manager.init_app(app)
     mail.init_app(app)
     moment.init_app(app)
+    limiter.init_app(app)
     configure_uploads(app, (users_upload, manga_upload, news_upload))
+
 
     from .api import api
     from .auth import auth
