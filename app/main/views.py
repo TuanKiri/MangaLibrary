@@ -1,5 +1,5 @@
 from . import main
-from .forms import SearchForm
+from ..form import SearchForm
 from flask import render_template, request, current_app
 from .. import db
 from ..models import User, Manga, News, logs, Comment, Tag

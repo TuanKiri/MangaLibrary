@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
 {% block page_content %}
-
+<form class="d-flex" method="get">
+    {{ search_form.search(placeholder="Поиск торрентов",class_="form-control me-2") }}
+    {{ search_form.submit(class_="btn btn-primary") }}
+</form>
+<h5 class="mb-3 mt-4">Все торренты</h5>
 {% endblock %}

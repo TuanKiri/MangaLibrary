@@ -12,8 +12,4 @@ class NewsForm(FlaskForm):
     image = MultipleFileField('', id="formFileMultiple", validators=[FileAllowed('avatars', message='Только изображения')])
     submit = SubmitField('Опубликовать')
 
-class SearchForm(FlaskForm):
-    search = StringField('Поиск:', validators=[Length(0, 64)])
-    submit = SubmitField('Искать')
-
 
