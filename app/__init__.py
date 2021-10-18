@@ -44,9 +44,10 @@ def create_app(config_name):
     from .main import main
     from .manga import manga
     from .news import news
+    from .torrents import torrents
     from .user import user
 
-    for blueprint in [api, auth, comment, errors, main, manga, news, user]:
+    for blueprint in [api, auth, comment, errors, main, manga, news, torrents, user]:
         app.register_blueprint(blueprint)
 
     return app
