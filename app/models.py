@@ -12,6 +12,7 @@ class Permission:
     PUBLICATION = 4
     MODERATE = 8
     ADMIN = 16
+    BANNED = 32
 
 
 class Role(db.Model):
@@ -36,6 +37,7 @@ class Role(db.Model):
             'Administrator': [Permission.FOLLOW, Permission.COMMENT,
                               Permission.PUBLICATION, Permission.MODERATE,
                               Permission.ADMIN],
+            'Banned': [Permission.BANNED]
         }
         default_role = 'User'
         for r in roles:
@@ -109,7 +111,6 @@ class User(UserMixin, db.Model):
                 self.role = Role.query.filter_by(name='Administrator').first()
             if self.role is None:
                 self.role = Role.query.filter_by(default=True).first()
-        self.follow(self)
 
     @property
     def password(self):
@@ -211,6 +212,9 @@ class User(UserMixin, db.Model):
 
     def is_administrator(self):
         return self.can(Permission.ADMIN)
+
+    def banned(self):
+        return self.can(Permission.BANNED)
 
     def ping(self):
         self.last_seen = datetime.utcnow()

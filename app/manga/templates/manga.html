@@ -42,7 +42,7 @@
             </div>
         {% endif %}
         <h6 class="mb-3 mt-4">Комментарии:</h6>
-        {% if current_user.is_authenticated %}
+        {% if current_user.is_authenticated and current_user.can(Permission.COMMENT)%}
             <form action="{{ url_for('comment.add_manga_comment', title=manga.title) }}" method="post">
                 {{ comment_form.hidden_tag() }}
                 {{ comment_form.comment(class_="form-control", placeholder="Комментарий") }}

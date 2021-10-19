@@ -13,12 +13,12 @@
         </div>
         <!-- <p class="card-title">Комментарий к <a class="link-primary" href="">Не издевайся, Нагаторо-сан </a></p> -->
         <p>
-            {% if item.disabled %}
+            {% if item.disabled or item.user.banned() %}
                 <i>Данный комментарий был заблокирован модератором.</i>
             {% endif %}
         </p>
         <p>
-            {% if moderate or not item.disabled %}
+            {% if moderate or not item.disabled and not item.user.banned() %}
                 {{ item.body }}
             {% endif %}
         </p>

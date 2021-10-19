@@ -17,3 +17,11 @@ def permission_required(permission):
 
 def admin_required(f):
     return permission_required(Permission.ADMIN)(f)
+
+def not_banned(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if current_user.banned:
+            abort(403)
+        return f(*args, **kwargs)
+    return decorated_function

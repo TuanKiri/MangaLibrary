@@ -9,6 +9,7 @@ from . import comment
 
 @comment.route('/add_manga_comment/<title>', methods=['GET', 'POST'])
 @login_required
+@permission_required(Permission.COMMENT)
 def add_manga_comment(title):
     comment_form = CommentForm()
     manga = Manga.query.filter_by(title=title).first_or_404()
@@ -24,6 +25,7 @@ def add_manga_comment(title):
 
 @comment.route('/add_news_comment/<title>', methods=['GET', 'POST'])
 @login_required
+@permission_required(Permission.COMMENT)
 def add_news_comment(title):
     comment_form = CommentForm()
     news = News.query.filter_by(title=title).first_or_404()

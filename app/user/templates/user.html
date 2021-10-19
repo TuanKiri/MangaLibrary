@@ -30,12 +30,12 @@
             {% endif %}
             {% if current_user.is_administrator() %}
                 <a type="button" href="{{ url_for('user.edit_profile_admin', username = user.username) }}" class="btn btn-edit-admin ms-2">Редактировать [Admin]</a>
-            {% elif user == current_user %}
+            {% elif user == current_user and not current_user.banned() %}
                 <a type="button" href="{{ url_for('user.edit', username=current_user.username) }}" class="btn btn-subscription ms-2">Редактировать</a>
             {% endif %}
-            <!-- <a type="button" href="#" class="btn btn-ban ms-2">Забанить</a> -->
     </div>
     <hr class="my-2 text-muted">
+    {% if not user.banned() %}
     <p class="px-2">
         <a class="btn btn-light d-flex align-items-center text-muted p-0 info-user" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
             <small>Информация о пользователе <svg class="ms-1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
@@ -67,6 +67,9 @@
             </ul>
         </div>
     </div>
+    {% else %}
+        <p class="px-2 text-danger">Забанен</p>
+    {% endif %}
 </div>
 <div class="d-flex justify-content-center pt-4">
     <div class="btn-group" role="group" aria-label="Basic example">

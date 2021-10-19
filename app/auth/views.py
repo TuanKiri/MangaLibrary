@@ -8,6 +8,7 @@ from flask_login import login_user, logout_user, login_required, \
 from .forms import LoginForm, RegistrationForm, ChangeEmailForm, \
                     ChangePasswordForm, PasswordResetRequestForm, \
                     PasswordResetForm
+from ..decorators import not_banned
 
 
 @auth.before_app_request
@@ -83,6 +84,7 @@ def confirm(token):
 
 @auth.route('/change_email', methods=['GET', 'POST'])
 @login_required
+@not_banned
 def change_email_request():
     change_email_form = ChangeEmailForm()
     if change_email_form.validate_on_submit():
@@ -112,6 +114,7 @@ def change_email(token):
 
 @auth.route('/change-password', methods=['GET', 'POST'])
 @login_required
+@not_banned
 def change_password():
     change_password_form = ChangePasswordForm()
     if change_password_form.validate_on_submit():
