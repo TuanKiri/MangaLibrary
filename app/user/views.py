@@ -5,7 +5,7 @@ from . import user
 from .forms import EditProfileForm, EditProfileAdminForm
 from .. import db, users_upload
 from ..models import Comment, User, Role, Permission, Manga, follows
-from ..decorators import admin_required, permission_required, not_banned
+from ..decorators import admin_required, permission_required
 
 @user.route('/<username>')
 def index(username):
@@ -31,7 +31,6 @@ def index(username):
 
 @user.route('/edit/<username>', methods=['GET', 'POST'])
 @login_required
-@not_banned
 def edit(username):
     edit_profile_form = EditProfileForm()
     if edit_profile_form.validate_on_submit():

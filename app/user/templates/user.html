@@ -18,7 +18,7 @@
             </div>
             <small class="text-muted">{{ moment(user.last_seen).fromNow() }}</small>
         </div>
-        {% if current_user.can(Permission.FOLLOW) and user != current_user %}
+        {% if current_user.can(Permission.FOLLOW) and user != current_user and not user.banned() %}
             {% if not current_user.is_following(user) %}
                 <a href="{{ url_for('user.follow', username = user.username) }}" type="button" class="btn btn-primary d-flex align-items-center"><svg class="me-1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
                     <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
@@ -30,7 +30,7 @@
             {% endif %}
             {% if current_user.is_administrator() %}
                 <a type="button" href="{{ url_for('user.edit_profile_admin', username = user.username) }}" class="btn btn-edit-admin ms-2">Редактировать [Admin]</a>
-            {% elif user == current_user and not current_user.banned() %}
+            {% elif user == current_user %}
                 <a type="button" href="{{ url_for('user.edit', username=current_user.username) }}" class="btn btn-subscription ms-2">Редактировать</a>
             {% endif %}
     </div>
