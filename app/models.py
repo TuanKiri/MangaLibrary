@@ -265,6 +265,18 @@ class User(UserMixin, db.Model):
         return 'User %r' % self.id                
 
 
+class Ban(db.Model):
+    __tablename__ = 'bans'
+    id = db.Column(db.Integer, primary_key=True)
+    created_time = db.Column(db.DateTime, default=datetime.utcnow)
+    admin_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    reason = db.Column(db.String(2048))
+
+    def __repr__(self):
+        return u'Bans: %r, ' % self.user_id
+
+
 class Manga(db.Model):
     __tablename__ = 'manga'
     id = db.Column(db.Integer, primary_key=True)
