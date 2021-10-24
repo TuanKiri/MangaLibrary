@@ -1,5 +1,7 @@
 from flask_login import UserMixin, AnonymousUserMixin
 from datetime import datetime
+
+from sqlalchemy.orm import backref
 from . import db, login_manager, users_upload, manga_upload, news_upload
 from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -76,6 +78,20 @@ logs = db.Table('logs',
                     db.Column('timestamp', db.DateTime, default=datetime.now())
                     )
 
+
+class Ban(db.Model):
+    __tablename__ = 'Bans'
+    id = db.Column(db.Integer, primary_key=True)
+    created_time = db.Column(db.DateTime, default=datetime.utcnow)
+    admin_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    email = db.Column(db.String(64), unique=True, index=True)
+    reason = db.Column(db.String(2048))
+
+    def __repr__(self):
+        return u'Bans: %r, ' % self.user_id
+
+
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -103,6 +119,7 @@ class User(UserMixin, db.Model):
 
     comments = db.relationship('Comment', backref='user', lazy='dynamic')
     news = db.relationship('News', backref='user', lazy='dynamic')
+    bans = db.relationship('Ban', foreign_keys='Ban.user_id', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -263,18 +280,6 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return 'User %r' % self.id                
-
-
-class Ban(db.Model):
-    __tablename__ = 'bans'
-    id = db.Column(db.Integer, primary_key=True)
-    created_time = db.Column(db.DateTime, default=datetime.utcnow)
-    admin_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    reason = db.Column(db.String(2048))
-
-    def __repr__(self):
-        return u'Bans: %r, ' % self.user_id
 
 
 class Manga(db.Model):
