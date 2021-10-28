@@ -1,6 +1,6 @@
 from .. import db, limiter
 from . import auth
-from ..models import User
+from ..models import User, Ban
 from ..email import send_email
 from flask import render_template, redirect, request, url_for, flash
 from flask_login import login_user, logout_user, login_required, \
@@ -24,7 +24,9 @@ def login():
         user = User.query.filter_by(email=login_form.email.data.lower()).first()
         if user is not None and user.verify_password(login_form.password.data):
             if user.banned():
-                flash('Ошибка входа! Вы заблокированы. Если вы считаете, что это ошибка, свяжитесь с модератором.', 'danger')
+                reason = Ban.query.filter_by(id=user.id).first().reason
+                flash(f'Ошибка входа! Вы заблокированы по причине: "{reason}". '
+                        'Если вы считаете, что это ошибка, свяжитесь с администратором.', 'danger')
                 return redirect(url_for('auth.login'))
             login_user(user, login_form.remember_me.data)
             next = request.args.get('next')
