@@ -5,7 +5,7 @@
     <div class="ms-2 d-flex flex-column flex-fill">
         <div class="fw-bold d-flex justify-content-between align-items-center pe-2"> 
             <div class="fw-bold"><a class="link-dark" href="{{ url_for('user.index', username = item.user.username) }}">{{ item.user.username }}</a>
-            {% if item.user.is_administrator() %} 
+            {% if item.user.is_administrator %} 
                 <small class="text-muted"> •</small> <small class="text-primary"> {{ item.user.role.name }}</small>
             {% endif %}
             </div>
@@ -13,12 +13,12 @@
         </div>
         <!-- <p class="card-title">Комментарий к <a class="link-primary" href="">Не издевайся, Нагаторо-сан </a></p> -->
         <p>
-            {% if item.disabled or item.user.banned() %}
+            {% if item.disabled or item.user.banned %}
                 <i>Данный комментарий был заблокирован модератором.</i>
             {% endif %}
         </p>
         <p>
-            {% if moderate or not item.disabled and not item.user.banned() %}
+            {% if moderate or not item.disabled and not item.user.banned %}
                 {{ item.body }}
             {% endif %}
         </p>

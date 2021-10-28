@@ -226,9 +226,11 @@ class User(UserMixin, db.Model):
     def can(self, perm):
         return self.role is not None and self.role.has_permission(perm)
 
+    @property
     def is_administrator(self):
         return self.can(Permission.ADMIN)
 
+    @property
     def banned(self):
         return self.can(Permission.BANNED)
 
@@ -260,22 +262,22 @@ class User(UserMixin, db.Model):
         return self.followers.filter_by(
             id=user.id).first() is not None
 
-    def read(self, value):
-        if not self.is_reading(value):
-            self.manga.append(value)
+    def read(self, manga):
+        if not self.is_reading(manga):
+            self.manga.append(manga)
             db.session.add(self)
 
-    def unread(self, value):
-        f = self.manga.filter_by(title=value.title).first()
+    def unread(self, manga):
+        f = self.manga.filter_by(title=manga.title).first()
         if f:
-            self.manga.remove(value)
+            self.manga.remove(manga)
             db.session.add(self)
 
-    def is_reading(self, value):
-        if value.id is None:
+    def is_reading(self, manga):
+        if manga.id is None:
             return False
         return self.manga.filter_by(
-            title=value.title).first() is not None
+            title=manga.title).first() is not None
 
     def __repr__(self):
         return 'User %r' % self.id                
@@ -413,6 +415,7 @@ class AnonymousUser(AnonymousUserMixin):
     def can(self, permissions):
         return False
 
+    @property
     def is_administrator(self):
         return False
 

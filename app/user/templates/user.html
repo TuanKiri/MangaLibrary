@@ -12,13 +12,13 @@
         </div>
         <div class="ms-3 me-auto">
             <div class="fw-bold">{{ user.username }}
-                {% if user.is_administrator() %} 
+                {% if user.is_administrator %} 
                     <small class="text-muted"> •</small> <small class="text-primary"> {{ user.role.name}}</small>
                 {% endif %}
             </div>
             <small class="text-muted">{{ moment(user.last_seen).fromNow() }}</small>
         </div>
-        {% if current_user.can(Permission.FOLLOW) and user != current_user and not user.banned() %}
+        {% if current_user.can(Permission.FOLLOW) and user != current_user and not user.banned %}
             {% if not current_user.is_following(user) %}
                 <a href="{{ url_for('user.follow', username = user.username) }}" type="button" class="btn btn-primary d-flex align-items-center"><svg class="me-1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
                     <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
@@ -28,14 +28,14 @@
                 <a href="{{ url_for('user.unfollow', username = user.username) }}" type="button" class="btn btn-danger d-flex align-items-center"> Отписаться</a>
             {% endif %}
             {% endif %}
-            {% if current_user.is_administrator() %}
+            {% if current_user.is_administrator %}
                 <a type="button" href="{{ url_for('user.edit_profile_admin', username = user.username) }}" class="btn btn-edit-admin ms-2">Редактировать [Admin]</a>
             {% elif user == current_user %}
                 <a type="button" href="{{ url_for('user.edit', username=current_user.username) }}" class="btn btn-subscription ms-2">Редактировать</a>
             {% endif %}
     </div>
     <hr class="my-2 text-muted">
-    {% if not user.banned() %}
+    {% if not user.banned %}
     <p class="px-2">
         <a class="btn btn-light d-flex align-items-center text-muted p-0 info-user" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
             <small>Информация о пользователе <svg class="ms-1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
@@ -49,7 +49,7 @@
         <div class="mb-2 user-info">            
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">Дата регистрации: {{ moment(user.member_since).format('L') }}</li>
-                {% if current_user.is_administrator() %}
+                {% if current_user.is_administrator %}
                 <li class="list-group-item">Почта: <a href="mailto:{{ user.email }}">{{ user.email }}</a></li>
                 {% endif %}
                 {% if user.location %}

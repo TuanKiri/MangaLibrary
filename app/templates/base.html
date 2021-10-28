@@ -48,7 +48,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarDarkDropdownMenuLink">
                             <li><a class="dropdown-item" href="{{ url_for('user.index', username=current_user.username) }}">Мой профиль</a></li>
-                            {% if current_user.is_administrator() %}
+                            {% if current_user.is_administrator %}
                                 <li><a class="dropdown-item" href="{{ url_for('news.add') }}">Добавить новость</a></li>
                             {% endif %}
                             {% if current_user.can(Permission.PUBLICATION) %}
