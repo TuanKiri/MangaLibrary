@@ -13,7 +13,7 @@ class EditMangaForm(FlaskForm):
     author = StringField('Автор', validators=[Length(0, 64, message='От 0 до 64 символов длиной')])
     tags = StringField('Теги')
     catalog = TextAreaField('Описание')
-    submit = SubmitField('Создать')
+    submit = SubmitField()
 
     def validate_username(self, field):
         if Manga.query.filter_by(title=field.data).first():

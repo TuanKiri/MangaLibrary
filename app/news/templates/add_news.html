@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block page_content %}
-<div class="col-xl-4 col-lg-4 col-md-5 col-sm-12 mx-auto">
+<div class="col-xl-4 col-lg-4 col-md-5 col-sm-12 mx-auto row">
     <h5 class="mb-3 mt-4 text-center">Создание новости</h5>
     <form class="row g-4" method="POST" enctype="multipart/form-data" >
         {{ news_form.hidden_tag() }}

@@ -128,7 +128,7 @@ def add_chapter(title):
         db.session.commit()
         flash('Глава опубликована.', 'success')
         return redirect(url_for('.index', title=manga.title))
-    return render_template("add_chapter.html", edit_chapter_form=edit_chapter_form)
+    return render_template("add_chapter.html", edit_chapter_form=edit_chapter_form, title=manga.title)
 
 @manga.route('<title>/<volume>/<chapter>')
 def chapter(title, volume, chapter):

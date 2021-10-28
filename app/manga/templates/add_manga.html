@@ -2,8 +2,24 @@
 {% from "_error_form_message.html" import error %}
 
 {% block page_content %}
-<div class="col-xl-4 col-lg-4 col-md-5 col-sm-12 mx-auto">
-    <h5 class="mb-3 mt-4 text-center">Создание манги</h5>
+<div class="col-xl-4 col-lg-4 col-md-5 col-sm-12 mx-auto row">
+    {% if manga %}
+    <div class="ps-0 d-flex justify-content-start">
+        <a type="button" class="btn btn-light" href="{{ url_for('manga.index', title = manga.title)}}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+            </svg>
+           Вернуться назад
+        </a>
+    </div>
+    {% endif %}
+    <h5 class="mb-3 mt-4 text-center">
+        {% if manga %}
+            Редактирование манги
+        {% else %}
+            Создание манги
+        {% endif %}
+    </h5>
     <form class="row g-4" method="POST" enctype="multipart/form-data" >
         {{ edit_manga_form.hidden_tag() }}
         <label for="formFile" class="form-label px-0">Выберите обложку</label>
@@ -24,7 +40,11 @@
         {{ error(edit_manga_form.catalog) }}
         <hr class="mb-0">
         <div class="d-flex justify-content-center">
-            {{ edit_manga_form.submit(class_="btn btn-primary px-3") }}
+        {% if manga %}
+            {{ edit_manga_form.submit(value="Обновить", class_="btn btn-primary px-3") }}
+        {% else %}
+            {{ edit_manga_form.submit(value="Создать", class_="btn btn-primary px-3") }}
+        {% endif %}
         </div>
     </form>
 </div>
