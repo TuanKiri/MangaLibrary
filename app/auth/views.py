@@ -24,7 +24,7 @@ def login():
         user = User.query.filter_by(email=login_form.email.data.lower()).first()
         if user is not None and user.verify_password(login_form.password.data):
             if user.banned:
-                reason = Ban.query.filter_by(id=user.id).first().reason
+                reason = Ban.query.filter_by(user_id=user.id).first().reason
                 flash(f'Ошибка входа! Вы заблокированы по причине: "{reason}". '
                         'Если вы считаете, что это ошибка, свяжитесь с администратором.', 'danger')
                 return redirect(url_for('auth.login'))
