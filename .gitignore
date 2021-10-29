@@ -9,3 +9,6 @@ __pycache__/
 
 # save images
 upload
+
+# migrations database  
+/migrations
