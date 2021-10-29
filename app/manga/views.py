@@ -32,7 +32,6 @@ def add():
             user=current_user._get_current_object()
         )
         if edit_manga_form.image.data:
-            print(type(edit_manga_form.image.data))
             forder = str(edit_manga_form.title.data)
             manga.image = manga_upload.save(edit_manga_form.image.data, folder=forder)
         db.session.add(manga)
