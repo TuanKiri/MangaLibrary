@@ -12,3 +12,7 @@ upload
 
 # migrations database  
 /migrations
+
+# Bootstrap 5
+app/static/css
+app/static/js

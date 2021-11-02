@@ -26,6 +26,7 @@ Chapter page:
 ![chapter page](assets/4.png)
 
 ## Installation for Windows ![Windows](assets/5.png) 
+
 ```cmd
 git clone https://github.com/JC5LZiy3HVfV5ux/MangaLibrary.git
 
@@ -38,7 +39,10 @@ python -m venv env
 pip install -r requirements.txt
 
 python db_create.py
+```
+Download Bootstrap 5 and add in static/js, static/css. 
 
+```cmd
 $env:FLASK_APP = 'run.py'   
 
 flask run   
