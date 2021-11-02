@@ -30,9 +30,6 @@
                 <a class="btn btn-primary" href="{{ url_for('main.tags_list') }}">Теги</a>
                 <a class="btn btn-primary" href="{{ url_for('main.users_list') }}">Пользователи</a>
                 <a class="btn btn-primary" href="{{ url_for('main.news_list') }}">Новости</a>
-                {% if current_user.is_authenticated %}
-                    <a class="btn btn-primary" href="{{ url_for('torrents.index') }}">Торренты</a>
-                {% endif %}
             </div>
             <div class="navbar-nav ms-auto">
                 {% if current_user.is_authenticated %}

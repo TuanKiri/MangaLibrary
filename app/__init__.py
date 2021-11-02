@@ -37,17 +37,15 @@ def create_app(config_name):
     configure_uploads(app, (users_upload, manga_upload, news_upload))
 
 
-    from .api import api
     from .auth import auth
     from .comment import comment
     from .errors import errors
     from .main import main
     from .manga import manga
     from .news import news
-    from .torrents import torrents
     from .user import user
 
-    for blueprint in [api, auth, comment, errors, main, manga, news, torrents, user]:
+    for blueprint in [auth, comment, errors, main, manga, news, user]:
         app.register_blueprint(blueprint)
 
     return app
