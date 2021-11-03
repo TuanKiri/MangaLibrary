@@ -71,6 +71,8 @@ def edit_profile_admin(username):
         user.email = edit_profile_admin_form.email.data
         user.username = edit_profile_admin_form.username.data
         user.confirmed = edit_profile_admin_form.confirmed.data
+        if not user.banned:
+            user.role = Role.query.get(edit_profile_admin_form.role.data)
         user.location = edit_profile_admin_form.location.data
         user.name = edit_profile_admin_form.name.data
         user.site = edit_profile_admin_form.site.data
@@ -82,6 +84,7 @@ def edit_profile_admin(username):
     edit_profile_admin_form.email.data = user.email
     edit_profile_admin_form.username.data = user.username
     edit_profile_admin_form.confirmed.data = user.confirmed
+    edit_profile_admin_form.role.data = user.role_id
     edit_profile_admin_form.location.data = user.location
     edit_profile_admin_form.name.data = user.name
     edit_profile_admin_form.site.data = user.site

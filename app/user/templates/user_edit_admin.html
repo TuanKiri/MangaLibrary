@@ -41,6 +41,11 @@
         </div>
         {{ edit_profile_admin_form.username(class_="form-control", placeholder="Никнейм") }}
         {{ error(edit_profile_admin_form.username) }}
+        {% if user.banned %}
+            {{ edit_profile_admin_form.role(class_="form-select", disabled=True) }}
+        {% else %}
+            {{ edit_profile_admin_form.role(class_="form-select") }}
+        {% endif %}
         {{ edit_profile_admin_form.location(class_="form-control", placeholder="Место проживания") }}
         {{ error(edit_profile_admin_form.location) }}
         {{ edit_profile_admin_form.name(class_="form-control", placeholder="Имя") }}
