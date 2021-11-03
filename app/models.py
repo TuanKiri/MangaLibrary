@@ -15,6 +15,7 @@ class Permission:
     MODERATE = 8
     ADMIN = 16
     BANNED = 32
+    PREMIUM = 64
 
 
 class Role(db.Model):
@@ -33,12 +34,13 @@ class Role(db.Model):
     @staticmethod
     def insert_roles():
         roles = {
-            'User': [Permission.FOLLOW, Permission.COMMENT],
-            'Moderator': [Permission.FOLLOW, Permission.COMMENT,
-                          Permission.PUBLICATION, Permission.MODERATE],
             'Administrator': [Permission.FOLLOW, Permission.COMMENT,
                               Permission.PUBLICATION, Permission.MODERATE,
                               Permission.ADMIN],
+            'Moderator': [Permission.FOLLOW, Permission.COMMENT,
+                          Permission.PUBLICATION, Permission.MODERATE],
+            'Premium': [Permission.PREMIUM, Permission.FOLLOW, Permission.COMMENT],
+            'User': [Permission.FOLLOW, Permission.COMMENT],
             'Banned': [Permission.BANNED]
         }
         default_role = 'User'
@@ -85,6 +87,7 @@ class Ban(db.Model):
     created_time = db.Column(db.DateTime, default=datetime.utcnow)
     admin_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    last_role = db.Column(db.String(16))
     reason = db.Column(db.String(2048))
 
     def __repr__(self):
