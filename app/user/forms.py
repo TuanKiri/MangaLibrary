@@ -26,18 +26,11 @@ class EditProfileAdminForm(FlaskForm):
     username = StringField('Никнейм', validators=[
         DataRequired(), Length(1, 64)], id='tags-tokenfield')
     confirmed = BooleanField('Подтвержден')
-    role = SelectField('Роль', coerce=int)
     location = StringField('Место проживания: ', validators=[Length(0, 64)])
     name = StringField('Имя', validators=[Length(0, 64)])
     site = StringField('Сайт: ', validators=[Length(0, 64)])
     about_me = TextAreaField('О себе: ', validators=[Length(0, 2048)])
     submit = SubmitField('Изменить')
-
-    def __init__(self, user, *args, **kwargs):
-        super(EditProfileAdminForm, self).__init__(*args, **kwargs)
-        self.role.choices = [(role.id, role.name)
-                             for role in Role.query.order_by(Role.name).all()]
-        self.user = user
 
     def validate_email(self, field):
         if field.data != self.user.email and \
@@ -48,3 +41,8 @@ class EditProfileAdminForm(FlaskForm):
         if field.data != self.user.username and \
                 User.query.filter_by(username=field.data).first():
             raise ValidationError('Имя пользователя уже занято.')
+
+
+class BanForm(FlaskForm):
+    reason = TextAreaField('Причина:', validators=[Length(0, 64)])
+    submit = SubmitField('Подтвердить')

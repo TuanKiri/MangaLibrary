@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% from "_error_form_message.html" import error %}
+
+{% block page_content %}
+<div class="col-xl-4 col-lg-4 col-md-5 col-sm-12 mx-auto">
+    <h5 class="mb-3 mt-4 text-center">Бан пользователя: {{username}}</h5>
+    <form class="row g-4" action="" method="POST">
+        {{ ban_form.hidden_tag() }}
+        {{ ban_form.reason(class_="form-control", placeholder="Причина бана") }}
+        {{ error(ban_form.reason) }}
+        <hr class="mb-0">
+        <div class="d-flex justify-content-center">
+            {{ ban_form.submit(class_="btn btn-primary px-3") }}
+        </div>
+    </form>
+</div>
+{% endblock %}

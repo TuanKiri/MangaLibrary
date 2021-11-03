@@ -2,9 +2,9 @@ from flask import render_template, redirect, url_for, flash, request,\
     current_app
 from flask_login import login_required, current_user
 from . import user
-from .forms import EditProfileForm, EditProfileAdminForm
+from .forms import EditProfileForm, EditProfileAdminForm, BanForm
 from .. import db, users_upload
-from ..models import Comment, User, Role, Permission, Manga, follows
+from ..models import Comment, User, Role, Permission, Manga, follows, Ban
 from ..decorators import admin_required, permission_required
 
 @user.route('/<username>')
@@ -71,7 +71,6 @@ def edit_profile_admin(username):
         user.email = edit_profile_admin_form.email.data
         user.username = edit_profile_admin_form.username.data
         user.confirmed = edit_profile_admin_form.confirmed.data
-        user.role = Role.query.get(edit_profile_admin_form.role.data)
         user.location = edit_profile_admin_form.location.data
         user.name = edit_profile_admin_form.name.data
         user.site = edit_profile_admin_form.site.data
@@ -83,7 +82,6 @@ def edit_profile_admin(username):
     edit_profile_admin_form.email.data = user.email
     edit_profile_admin_form.username.data = user.username
     edit_profile_admin_form.confirmed.data = user.confirmed
-    edit_profile_admin_form.role.data = user.role_id
     edit_profile_admin_form.location.data = user.location
     edit_profile_admin_form.name.data = user.name
     edit_profile_admin_form.site.data = user.site
@@ -122,4 +120,55 @@ def unfollow(username):
     current_user.unfollow(user)
     db.session.commit()
     flash('Вы больше не подписаны на %s.' % username, 'success')
+    return redirect(url_for('.index', username=username))
+
+
+@user.route('/banned/<username>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def banned(username):
+    ban_form = BanForm()
+
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        flash('Такого пользователя нет.', 'alert')
+        return redirect(url_for('.index', username=username))
+    
+    ban = Ban.query.filter_by(id=user.id).first()
+    if ban:
+        flash('Пользователь в бане.', 'alert')
+        return redirect(url_for('.index', username=username))
+
+    if ban_form.validate_on_submit():
+        ban = Ban(
+            admin_id=current_user.id,
+            user_id=user.id,
+            reason=ban_form.reason.data,
+            last_role=user.role.name
+        )
+        user.role = Role.query.filter_by(name='Banned').first()
+        db.session.add_all([ban, user])
+        db.session.commit()
+        return redirect(url_for('.index', username=username))
+    return render_template('ban.html', username=username, ban_form=ban_form)
+
+
+@user.route('/unbanned/<username>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def unbanned(username):
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        flash('Такого пользователя нет.', 'alert')
+        return redirect(url_for('.index', username=username))
+    
+    ban = Ban.query.filter_by(user_id=user.id).first()
+    if ban is None:
+        flash('Пользователь не в бане.', 'alert')
+        return redirect(url_for('.index', username=username))
+
+    user.role = Role.query.filter_by(name=ban.last_role).first()
+    db.session.add(user)
+    db.session.delete(ban)
+    db.session.commit()
     return redirect(url_for('.index', username=username))

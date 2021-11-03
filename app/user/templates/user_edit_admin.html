@@ -12,6 +12,13 @@
         </a>
     </div>
     <h5 class="mb-3 mt-4 text-center">Редактировать профиль [Admin]</h5>
+    <div class="row">
+        {% if user.banned %}
+            <a type="button" href="{{ url_for('user.unbanned', username = user.username) }}" class="btn btn-edit-admin">Разбанить</a>
+        {% else %}
+            <a type="button" href="{{ url_for('user.banned', username = user.username) }}" class="btn btn-ban">Забанить</a>
+        {% endif %}
+    </div>
     <form class="row g-4" method="POST" enctype="multipart/form-data" >
         {{ edit_profile_admin_form.hidden_tag() }}
         <label for="formFile" class="form-label px-0">Выберите аватарку</label>
@@ -32,7 +39,6 @@
             {{ edit_profile_admin_form.confirmed(class_="form-check-input") }}
             <label class="form-check-label" for="flexSwitchCheckChecked">Подтвержден</label>
         </div>
-        {{ edit_profile_admin_form.role(class_="form-select") }}
         {{ edit_profile_admin_form.username(class_="form-control", placeholder="Никнейм") }}
         {{ error(edit_profile_admin_form.username) }}
         {{ edit_profile_admin_form.location(class_="form-control", placeholder="Место проживания") }}

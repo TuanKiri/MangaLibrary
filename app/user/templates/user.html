@@ -29,7 +29,7 @@
             {% endif %}
             {% endif %}
             {% if current_user.is_administrator %}
-                <a type="button" href="{{ url_for('user.edit_profile_admin', username = user.username) }}" class="btn btn-edit-admin ms-2">Редактировать [Admin]</a>
+                <a type="button" href="{{ url_for('user.edit_profile_admin', username = user.username) }}" class="btn btn-edit-admin ms-2">Редактировать</a>
             {% elif user == current_user %}
                 <a type="button" href="{{ url_for('user.edit', username=current_user.username) }}" class="btn btn-subscription ms-2">Редактировать</a>
             {% endif %}
