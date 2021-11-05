@@ -59,10 +59,19 @@
                 {% endfor %}
               </ol>
         </div>
-    </div>
-    <h5 class="mb-3 mt-4">Часто используемые теги</h5>
+    </div>    
     <h5 class="mb-3 mt-4">Новая манга</h5>
-  {% include '_manga.html' %}
+    <div class="row" >
+      <div class="col-sm-9">
+        {% include '_manga.html' %}
+      </div>
+      <div class="col-3">
+        <h6 class="mb-3">Часто используемые теги</h6>
+        {% for p in popular_tags %}
+            <a type="button" href="{{ url_for('manga.tag', name = p.Tag.name) }}" class="btn btn-light mb-2">{{ p.Tag.name }}</a>
+        {% endfor %}
+      </div>
+    </div>
 
 {% if pagination and pagination.pages > 1 %}
 {{ macros.pagination_widget(pagination, '.index') }}

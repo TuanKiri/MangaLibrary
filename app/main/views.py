@@ -2,7 +2,7 @@ from . import main
 from ..form import SearchForm
 from flask import render_template, request, current_app
 from .. import db
-from ..models import User, Manga, News, logs, Comment, Tag
+from ..models import User, Manga, News, logs, Comment, Tag, manga_tag
 
 
 @main.route('/')
@@ -20,13 +20,18 @@ def index():
                                 .order_by(db.text('popular DESC')) \
                                 .limit(5)
 
+    popular_tags = db.session.query(Tag, db.func.count(manga_tag.c.tag_id).label('popular')) \
+                                .join(manga_tag).group_by(Tag) \
+                                .order_by(db.text('popular DESC')) \
+                                .limit(10)
+
     news = News.query.order_by(News.timestamp.desc()).limit(5)
     page = request.args.get('page', 1, type=int)
     pagination = manga.paginate(
     page, per_page=current_app.config['NEWS_LIST_PER_PAGE'],
     error_out=False)
     return render_template('index.html', search_form=search_form, theme=theme, popular_manga=popular_manga, popular_users=popular_users, \
-                            news=news, pagination=pagination, title="Главная")
+                            news=news, popular_tags=popular_tags, pagination=pagination, title="Главная")
 
 
 @main.route('/manga-list', methods=['GET'])
