@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os
 from app import create_app, db
 from app.models import User, Manga, Role
@@ -18,7 +17,7 @@ user5 = User(email="dima@mail.ru", password="987", username="троеточие"
 user6 = User(email="anna@mail.ru", password="anna", username="One03", name="Anna")
 
 manga1 = Manga(title="Гармония", author="ITOU Keikaku", tags_string="Драма,Научная фантастика,Психология,Сёнэн,Юри")
-manga2 = Manga(title="Эврика 7: Псалмы Планет", author="BONES", tags_string="Драма,Меха,Научная фантастика,Романтика")
+manga2 = Manga(title="Эврика 7. Псалмы Планет", author="BONES", tags_string="Драма,Меха,Научная фантастика,Романтика")
 manga3 = Manga(title="Всё, что тебе нужно — это убивать", author="TAKEUCHI Ryousuke", tags_string="Боевик,Драма,Психология,Сёнэн,\
                                                                                                     Трагедия,Фантастика,Меха,Мистика,\
                                                                                                     Романтика,Военные,Монстры,\

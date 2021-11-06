@@ -20,7 +20,6 @@ class Config:
 
     # 50 megabytes
     MAX_CONTENT_LENGTH = 50 * 1000 * 1000
-    UPLOADS_DEFAULT_DEST = os.path.join(basedir, 'upload/')
 
     USER_FOLLOWERS_PER_PAGE = 10
     USER_COMMENTS_PER_PAGE = 10
@@ -38,6 +37,7 @@ class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
+    UPLOADS_DEFAULT_DEST = os.path.join(basedir, 'upload-dev/')
 
 
 class TestingConfig(Config):
@@ -49,6 +49,7 @@ class TestingConfig(Config):
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+    UPLOADS_DEFAULT_DEST = os.path.join(basedir, 'upload/')
 
 
 config = {
