@@ -2,12 +2,12 @@
     {% for item in pagination.items %}
       <tbody>
         <tr class="d-flex">
-            <td>        
+            <td class="ps-0">        
                 <img src="{{ item.image_url() }}" style="width: 150px" class="" alt="...">
             </td>
             <td>
-                <div class="card-body">
-                    <h5 class="card-title"><a class="link-dark" href="{{ url_for('manga.index', title = item.title) }}">{{ item.title }}</a></h5>
+                <div class="card-body pt-0">
+                    <h6 class="card-title"><a class="link-dark" href="{{ url_for('manga.index', title = item.title) }}">{{ item.title }}</a></h6>
                     <p class="card-text">{{ item.catalog }}</p>
                     {% if item.tags.count() %}
                         {% for tag in item.tags %}
