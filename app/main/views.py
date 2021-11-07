@@ -2,8 +2,8 @@ from . import main
 from ..form import SearchForm
 from flask import render_template, request, current_app
 from .. import db
-from ..models import User, Manga, News, logs, Comment, Tag, manga_tag
-
+from ..models import User, Manga, News, logs, Comment, Tag, manga_tag, Chapter
+from sqlalchemy import desc
 
 @main.route('/')
 def index():
@@ -12,26 +12,33 @@ def index():
     manga = Manga.query.order_by(Manga.timestamp.desc())
 
     popular_manga = db.session.query(Manga, db.func.count(logs.c.user_id).label('popular')) \
-                                .join(logs).group_by(Manga) \
+                                .join(logs) \
+                                .group_by(Manga) \
                                 .order_by(db.text('popular DESC')) \
                                 .limit(5)
     popular_users = db.session.query(User, db.func.count(Comment.user_id).label('popular')) \
-                                .join(Comment).group_by(User) \
+                                .join(Comment) \
+                                .group_by(User) \
                                 .order_by(db.text('popular DESC')) \
                                 .limit(5)
-
     popular_tags = db.session.query(Tag, db.func.count(manga_tag.c.tag_id).label('popular')) \
-                                .join(manga_tag).group_by(Tag) \
+                                .join(manga_tag) \
+                                .group_by(Tag) \
                                 .order_by(db.text('popular DESC')) \
+                                .limit(15)
+    new_chapter = db.session.query(Manga, Chapter, db.func.max(Chapter.timestamp).label('timestamp')) \
+                                .join(Chapter) \
+                                .group_by(Manga) \
+                                .order_by(db.text('timestamp DESC')) \
                                 .limit(10)
+    news = News.query.order_by(News.timestamp.desc()).limit(10)
 
-    news = News.query.order_by(News.timestamp.desc()).limit(5)
     page = request.args.get('page', 1, type=int)
     pagination = manga.paginate(
     page, per_page=current_app.config['NEWS_LIST_PER_PAGE'],
     error_out=False)
     return render_template('index.html', search_form=search_form, theme=theme, popular_manga=popular_manga, popular_users=popular_users, \
-                            news=news, popular_tags=popular_tags, pagination=pagination, title="Главная")
+                            news=news, popular_tags=popular_tags, new_chapter=new_chapter, pagination=pagination, title="Главная")
 
 
 @main.route('/manga-list', methods=['GET'])

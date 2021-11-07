@@ -337,6 +337,7 @@ class Chapter(db.Model):
     volume = db.Column(db.String(32))
     chapter = db.Column(db.String(32))
     title = db.Column(db.String(128))
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     manga_id = db.Column(db.Integer, db.ForeignKey('manga.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     image = db.relationship('Images', backref='chapter', lazy='dynamic')

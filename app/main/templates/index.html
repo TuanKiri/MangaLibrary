@@ -14,7 +14,7 @@
         <img src="{{ p.Manga.image_url() }}" alt="...">
         <div class="card-body d-flex align-items-center justify-content-center">
             <h6 class="card-title mb-0"><a class="link-dark" href="{{ url_for('manga.index', title=p.Manga.title) }}">{{ p.Manga.title }}</a></h6>
-          </div>
+        </div>
         <div class="card-footer">
           <small class="text-muted">Обновлено: {{ moment(p.Manga.timestamp).fromNow() }}</small>
         </div>
@@ -30,7 +30,7 @@
               {% for item in news %}
               <a href="{{ url_for('news.index', title = item.title) }}" class="list-group-item list-group-item-action">
                   <div class="d-flex w-100 justify-content-between">
-                      <h6 class="mb-1">{{ item.title }}</h6>
+                      <h6>{{ item.title }}</h6>
                       <small class="text-muted">{{ moment(item.timestamp).fromNow() }}</small>
                   </div>
                   <small class="text-muted d-flex align-items-center">
@@ -42,7 +42,7 @@
               </a>
               {% endfor %}
             </div>
-            <a type="button" href="{{ url_for('.news_list') }}" class="btn btn-light mt-4">
+            <a type="button" href="{{ url_for('.news_list') }}" class="btn btn-light mt-3">
               Все новости
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
@@ -57,7 +57,13 @@
                       <span class="avatar avatar-small ms-2" style="background-image:  url({{ user.User.avatar_url() }})">
                       </span>
                       <div class="ms-2 me-auto">
-                          <div class="fw-bold"> <a class="link-dark" href="{{ url_for('user.index', username = user.User.username) }}">{{ user.User.username }}</a></div>
+                          <div class="fw-bold"> 
+                            <h6 class="mb-1">
+                              <a class="link-dark" href="{{ url_for('user.index', username = user.User.username) }}">
+                                {{ user.User.username }}
+                              </a>
+                            </h6>
+                          </div>
                           онлайн {{ moment(user.User.last_seen).fromNow() }}
                       </div>
                       <span class="badge bg-primary rounded-pill">{{ user.popular }}</span>
@@ -81,6 +87,19 @@
         <h6 class="mb-3">Часто используемые теги</h6>
         {% for p in popular_tags %}
             <a type="button" href="{{ url_for('manga.tag', name = p.Tag.name) }}" class="btn btn-light mb-2">{{ p.Tag.name }}</a>
+        {% endfor %}
+        <h6 class="mb-3 mt-4">Новые главы</h6>
+        {% for c in new_chapter %}
+        <div class="mb-3 d-flex" >
+          <div>
+            <img src="{{ c.Manga.image_url() }}" style="width: 65px" alt="...">
+          </div>
+          <div class="ms-2">
+            <h6 class="card-title"><a class="link-dark" href="{{ url_for('manga.index', title=c.Manga.title) }}">{{ c.Manga.title }}</a></h6>
+            <p class="mb-0">Том {{c.Chapter.volume}} Глава {{c.Chapter.chapter}}</p>
+            <small class="text-muted">Читают: {{ c.Manga.users.count() }}</small>
+          </div>
+        </div>
         {% endfor %}
       </div>
     </div>
