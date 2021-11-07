@@ -35,7 +35,7 @@ def index():
 
     page = request.args.get('page', 1, type=int)
     pagination = manga.paginate(
-    page, per_page=current_app.config['NEWS_LIST_PER_PAGE'],
+    page, per_page=current_app.config['MANGA_LIST_PER_PAGE'],
     error_out=False)
     return render_template('index.html', search_form=search_form, theme=theme, popular_manga=popular_manga, popular_users=popular_users, \
                             news=news, popular_tags=popular_tags, new_chapter=new_chapter, pagination=pagination, title="Главная")
