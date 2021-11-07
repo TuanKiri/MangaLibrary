@@ -1,5 +1,5 @@
 {% macro pagination_widget(pagination, endpoint, fragment='') %}
-<ul class="pagination justify-content-center mt-4">
+<ul class="pagination justify-content-center mt-4 mb-5">
     <li {% if not pagination.has_prev %} class="page-item disabled" {% endif %}>
         <a class="page-link" href="{% if pagination.has_prev %}{{ url_for(endpoint, page=pagination.prev_num, **kwargs) }}{{ fragment }}{% else %}#{% endif %}">
             Назад

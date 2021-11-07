@@ -82,15 +82,19 @@
     {% block page_content %}{% endblock %}
 </main>
 
-<footer class="footer py-3 bg-light align-bottom">
+<footer class="footer py-3 bg-primary align-bottom">
+    <div class="container-fluid d-inline-flex justify-content-center mb-2">
+        <a class="navbar-brand text-white" href="{{ url_for('main.index') }}">
+            <img id="logo" src="{{ url_for('static',filename='img/logo.svg') }}" class="d-inline-block align-text-top" alt="" width="27.88" height="30">
+            MangaLibrary
+        </a>
+    </div>
     <div class="container-fluid text-muted d-inline-flex justify-content-center">
-        <img id="footer-logo" src="{{ url_for('static',filename='img/github.svg') }}" class="me-2" alt="" width="19" height="19">
-            <small>Created lovely by 
-                <a class="link-primary" href="https://github.com/JC5LZiy3HVfV5ux">
-                    @JC5LZiy3HVfV5ux
-                </a>
-            </small>
-      </div>
+        <a class="btn text-white"><small class="fw-bold">Правообладателям</small></a>
+        <a class="btn text-white"><small>Вконтакте</small></a>
+        <a class="btn text-white"><small class="fw-bold">О проекте</small></a>
+        <a class="btn text-white"><small>Discord</small></a>
+    </div>
 {% endblock %}
 
 {% block scripts %}
