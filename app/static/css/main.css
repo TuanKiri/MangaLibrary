@@ -1,3 +1,7 @@
+.g-recaptcha {
+  padding: 0 !important;
+}
+
 .fw-bold a {
   text-decoration: none;
 }

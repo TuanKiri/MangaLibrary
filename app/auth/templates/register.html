@@ -13,6 +13,8 @@
         {{ registration_form.password(class_="form-control", placeholder="Пароль") }}
         {{ registration_form.password2(class_="form-control", placeholder="Повторите пароль") }}
         {{ error(registration_form.password) }}
+        {{ registration_form.recaptcha }}
+        {{ error(registration_form.recaptcha) }}
         <hr class="mb-0">
         <div class="d-flex justify-content-center">
             {{ registration_form.submit(class_="btn btn-primary px-3") }}

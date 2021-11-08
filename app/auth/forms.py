@@ -1,6 +1,6 @@
 from app import db
 from app.models import User
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms import ValidationError
 from wtforms.validators import Email, Length, DataRequired, EqualTo
@@ -23,6 +23,7 @@ class RegistrationForm(FlaskForm):
                              validators=[DataRequired(message='Поле пустое!'), EqualTo('password2', message='Пароли не совпадают'),
                                          Length(1, 32)])
     password2 = PasswordField('Повторить пароль', validators=[DataRequired(message='Поле пустое!')])
+    recaptcha = RecaptchaField()
     submit = SubmitField('Зарегистрироваться')
 
     def validate_email(self, filed):

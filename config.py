@@ -28,6 +28,9 @@ class Config:
     MANGA_COMMENTS_PER_PAGE = 10
     NEWS_LIST_PER_PAGE = 10
     TAGS_LIST_PER_PAGE = 100
+    RECAPTCHA_PUBLIC_KEY = 'public key'
+    RECAPTCHA_PRIVATE_KEY = 'secret key'
+
     @staticmethod
     def init_app(app):
         pass
