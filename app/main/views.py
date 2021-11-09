@@ -33,12 +33,20 @@ def index():
                                 .limit(10)
     news = News.query.order_by(News.timestamp.desc()).limit(10)
 
+    manga_themes = db.session.query(Manga.title, db.func.count().label('popular')) \
+                                .join(Comment) \
+                                .group_by(Comment.manga_id)
+    news_theme = db.session.query(News.title, db.func.count().label('popular')) \
+                                .join(Comment) \
+                                .group_by(Comment.news_id)
+    popular_themes = news_theme.union(manga_themes).order_by(db.text('popular DESC'))
+    
     page = request.args.get('page', 1, type=int)
     pagination = manga.paginate(
     page, per_page=current_app.config['MANGA_LIST_PER_PAGE'],
     error_out=False)
     return render_template('index.html', search_form=search_form, theme=theme, popular_manga=popular_manga, popular_users=popular_users, \
-                            news=news, popular_tags=popular_tags, new_chapter=new_chapter, pagination=pagination, title="Главная")
+                            news=news, popular_tags=popular_tags, new_chapter=new_chapter, popular_themes=popular_themes, pagination=pagination, title="Главная")
 
 
 @main.route('/manga-list', methods=['GET'])
