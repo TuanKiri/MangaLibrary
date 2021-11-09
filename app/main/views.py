@@ -33,10 +33,10 @@ def index():
                                 .limit(10)
     news = News.query.order_by(News.timestamp.desc()).limit(10)
 
-    manga_themes = db.session.query(Manga.title, db.func.count().label('popular')) \
+    manga_themes = db.session.query(Manga.title,  db.true().label('manga'), db.func.count().label('popular')) \
                                 .join(Comment) \
                                 .group_by(Comment.manga_id)
-    news_theme = db.session.query(News.title, db.func.count().label('popular')) \
+    news_theme = db.session.query(News.title, db.false().label('manga'), db.func.count().label('popular')) \
                                 .join(Comment) \
                                 .group_by(Comment.news_id)
     popular_themes = news_theme.union(manga_themes).order_by(db.text('popular DESC'))
