@@ -106,8 +106,10 @@
         <p class="card-title mb-0">
           {% if theme.manga %}
             <a class="link-dark" href="{{ url_for('manga.index', title=theme.title) }}">{{ theme.title }}</a>
+            <small><span class="badge bg-primary">манга</span></small>
           {% else %}
             <a class="link-dark" href="{{ url_for('news.index', title=theme.title) }}">{{ theme.title }}</a>
+            <small><span class="badge bg-info">новости</span></small>
           {% endif %}
         </p>
           <small class="mb-2 d-flex align-items-center text-muted">
