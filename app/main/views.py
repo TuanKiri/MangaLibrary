@@ -3,7 +3,7 @@ from ..form import SearchForm
 from flask import render_template, request, current_app
 from .. import db
 from ..models import User, Manga, News, logs, Comment, Tag, manga_tag, Chapter
-from sqlalchemy import desc
+from datetime import datetime, timedelta
 
 @main.route('/')
 def index():
@@ -31,22 +31,22 @@ def index():
                                 .group_by(Manga) \
                                 .order_by(db.text('timestamp DESC')) \
                                 .limit(10)
-    news = News.query.order_by(News.timestamp.desc()).limit(10)
+    news = News.query.order_by(News.timestamp.desc()).limit(5)
 
-    manga_themes = db.session.query(Manga.title,  db.true().label('manga'), db.func.count().label('popular')) \
+    manga_discussion = db.session.query(Manga.title, db.literal('manga').label('type'), db.func.count().label('popular')) \
                                 .join(Comment) \
-                                .group_by(Comment.manga_id)
-    news_theme = db.session.query(News.title, db.false().label('manga'), db.func.count().label('popular')) \
+                                .group_by(Comment.manga_id).filter(Comment.timestamp >= datetime.now() - timedelta(days=1))
+    news_discussion = db.session.query(News.title, db.literal('news').label('type'), db.func.count().label('popular')) \
                                 .join(Comment) \
-                                .group_by(Comment.news_id)
-    popular_themes = news_theme.union(manga_themes).order_by(db.text('popular DESC'))
+                                .group_by(Comment.news_id).filter(Comment.timestamp >= datetime.now() - timedelta(days=1))
+    popular_discussion = news_discussion.union(manga_discussion).order_by(db.text('popular DESC')).limit(5)
     
     page = request.args.get('page', 1, type=int)
     pagination = manga.paginate(
     page, per_page=current_app.config['MANGA_LIST_PER_PAGE'],
     error_out=False)
     return render_template('index.html', search_form=search_form, theme=theme, popular_manga=popular_manga, popular_users=popular_users, \
-                            news=news, popular_tags=popular_tags, new_chapter=new_chapter, popular_themes=popular_themes, pagination=pagination, title="Главная")
+                            news=news, popular_tags=popular_tags, new_chapter=new_chapter, popular_discussion=popular_discussion, pagination=pagination, title="Главная")
 
 
 @main.route('/manga-list', methods=['GET'])

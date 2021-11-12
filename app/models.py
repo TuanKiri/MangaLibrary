@@ -1,7 +1,5 @@
 from flask_login import UserMixin, AnonymousUserMixin
 from datetime import datetime
-
-from sqlalchemy.orm import backref
 from . import db, login_manager, users_upload, manga_upload, news_upload
 from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
