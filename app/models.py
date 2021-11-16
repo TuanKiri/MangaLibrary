@@ -413,6 +413,11 @@ class Images(db.Model):
     news_id = db.Column(db.Integer, db.ForeignKey('news.id'))
     chapter_id = db.Column(db.Integer, db.ForeignKey('chapter.id'))
 
+    def image_url(self, _external=False):
+        if self.image:
+            return url_for('_uploads.uploaded_file', setname=manga_upload.name, filename=self.image,
+                               _external=_external)
+
 class AnonymousUser(AnonymousUserMixin):
     def can(self, permissions):
         return False

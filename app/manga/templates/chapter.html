@@ -1,63 +1,127 @@
-{% extends "base.html" %}
-{% import "_macros.html" as macros %}
+{% extends "bootstrap/base.html" %}
 
-{% block page_content %}
-
-{% set item = pagination.items[0] %}
-{% set chapters = manga.chapter.all() %}
-
-<div class="text-center">
-  <a href="{{ url_for('manga.index', title = manga.title) }}">На страницу с мангой</a>
-</div>
-
-<div class="d-flex my-2 justify-content-center">
-  <ul class="pagination justify-content-center mt-2">
-    <li {% if not pagination.has_prev %} class="page-item disabled" {% endif %}>
-        <a class="page-link" href="{% if pagination.has_prev %}{% set prev = pagination.prev().items[0]  %}{{ url_for('manga.chapter', title = manga.title, volume = prev.volume, chapter = prev.chapter) }}{% else %}#{% endif %}">
-            Предыдущая
-        </a>
-    </li>
-    <select class="select form-select" onchange="location = this.value;" aria-label="Default select example">
-      {% for chapter in chapters %}
-        <option value="{{ url_for('manga.chapter', title = manga.title, volume = chapter.volume, chapter = chapter.chapter) }}" {% if item.volume == chapter.volume and item.chapter == chapter.chapter  %} selected {% endif %}>Том {{ chapter.volume }} Глава {{ chapter.chapter }} {{ chapter.title}}</option>
-      {% endfor %}
-    </select>
-    <li {% if not pagination.has_next %} class="page-item disabled" {% endif %}>
-      <a class="page-link" href="{% if pagination.has_next %}{% set next = pagination.next().items[0]  %}{{ url_for('manga.chapter', title = manga.title, volume = next.volume, chapter = next.chapter) }}{% else %}#{% endif %}">
-          Следующая
-      </a>
-    </li>
-  </ul>
-</div>
-
-{% for image in item.image_url() %}
-<div class="text-center">
-      <img class="page-img" src="{{ image }}" alt="...">
-</div>
-{% endfor %}
-
-<div class="d-flex my-2 justify-content-center">
-  <ul class="pagination justify-content-center mt-4">
-    <li {% if not pagination.has_prev %} class="page-item disabled" {% endif %}>
-        <a class="page-link" href="{% if pagination.has_prev %}{% set prev = pagination.prev().items[0]  %}{{ url_for('manga.chapter', title = manga.title, volume = prev.volume, chapter = prev.chapter) }}{% else %}#{% endif %}">
-            Предыдущая
-        </a>
-    </li>
-    <select class="select form-select" onchange="location = this.value;" aria-label="Default select example">
-      {% for chapter in chapters %}
-        <option value="{{ url_for('manga.chapter', title = manga.title, volume = chapter.volume, chapter = chapter.chapter) }}" {% if item.volume == chapter.volume and item.chapter == chapter.chapter  %} selected {% endif %}>Том {{ chapter.volume }} Глава {{ chapter.chapter }} {{ chapter.title}}</option>
-      {% endfor %}
-    </select>
-    <li {% if not pagination.has_next %} class="page-item disabled" {% endif %}>
-      <a class="page-link" href="{% if pagination.has_next %}{% set next = pagination.next().items[0]  %}{{ url_for('manga.chapter', title = manga.title, volume = next.volume, chapter = next.chapter) }}{% else %}#{% endif %}">
-          Следующая
-      </a>
-    </li>
-  </ul>
-</div>
-
-<div class="text-center">
-      <a href="{{ url_for('manga.index', title = manga.title) }}">На страницу с мангой</a>
-</div>
-
+{% block styles %}
+  <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+  <link href="{{ url_for('static',filename='css/bootstrap.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static',filename='css/main.css') }}" rel="stylesheet">
 {% endblock %}
+
+{% block title %}
+  {% if title %}
+    {{ title }} - Manga Library
+  {% else %}
+    Manga Library
+  {% endif %}
+{% endblock %}
+
+{% block navbar %}
+<nav class="navbar bg-primary py-0 navbar-expand-md navbar-dark">
+  <!-- return to manga page -->
+  <a class="btn btn-primary d-flex align-self-stretch align-items-center rounded-0" href="{{ url_for('manga.index', title = manga.title) }}">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-square-fill" viewBox="0 0 16 16">
+      <path d="M16 14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12zm-4.5-6.5H5.707l2.147-2.146a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L5.707 8.5H11.5a.5.5 0 0 0 0-1z"/>
+    </svg>
+  </a>
+  <div class="text-white bg-primary mx-4">
+    {{manga.title}}
+  </div>
+  <!-- go to the prev chapter -->
+  <a class="btn btn-primary d-flex align-self-stretch align-items-center px-1 rounded-0 {% if not pagination_chapters.has_prev %} disabled {% endif %}" 
+    {% if pagination_chapters.has_prev %}
+      href="{{ url_for('manga.chapter', title = manga.title, volume = pagination_chapters.prev().items[0].volume, chapter = pagination_chapters.prev().items[0].chapter, page=pagination_chapters.prev().items[0].image.count()) }}"
+    {% endif %}
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+      <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
+    </svg>
+  </a>
+  <!-- selecting a chapter -->
+  <select class="w-auto btn form-control btn-primary px-1 rounded-0" onchange="location = this.value;" aria-label="Default select example">
+    {% for chapter in chapters %}
+      <option class="bg-white text-dark" value="{{ url_for('manga.chapter', title = manga.title, volume = chapter.volume, chapter = chapter.chapter) }}" 
+        {% if current_chapter.volume == chapter.volume and current_chapter.chapter == chapter.chapter  %} 
+          selected 
+        {% endif %}
+      >
+      Том {{ chapter.volume }} Глава {{ chapter.chapter }}
+      </option>
+    {% endfor %}
+  </select>
+  <!-- go to the next chapter -->
+  <a class="btn btn-primary d-flex align-self-stretch align-items-center px-1 rounded-0 {% if not pagination_chapters.has_next %} disabled {% endif %}" 
+    {% if pagination_chapters.has_next %}
+      href="{{ url_for('manga.chapter', title = manga.title, volume = pagination_chapters.next().items[0].volume, chapter = pagination_chapters.next().items[0].chapter) }}"
+    {% endif %}
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+      <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+    </svg>
+  </a>
+  <!-- selecting a page -->
+  <select class="form-control btn-primary w-auto border-0 rounded-0 ms-4" onchange="location = this.value;" aria-label="Default select example">
+    {% for p in range(1, pagination_images.total + 1)%}
+      <option class="bg-white text-dark" value="{{ url_for('manga.chapter', title = manga.title, volume = current_chapter.volume, chapter = current_chapter.chapter, page=p) }}" 
+        {% if p == pagination_images.page  %} 
+          selected 
+        {% endif %}
+      >
+      Страница {{p}} / {{ pagination_images.total }}
+      </option>
+    {% endfor %}
+  </select>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex position-absolute h-100 w-100">
+  <!-- go to the prev page -->
+  <a class="w-100 rounded-0 {% if not pagination_images.has_prev and not pagination_chapters.has_prev %}btn disabled {% endif %}" 
+    {% if pagination_images.has_prev %}
+      href="{{ url_for('manga.chapter', title = manga.title, volume = current_chapter.volume, chapter = current_chapter.chapter, page=pagination_images.prev_num) }}"
+    {% elif not pagination_images.has_prev and pagination_chapters.has_prev %}
+      href="{{ url_for('manga.chapter', title = manga.title, volume = pagination_chapters.prev().items[0].volume, chapter = pagination_chapters.prev().items[0].chapter, page=pagination_chapters.prev().items[0].image.count()) }}"
+    {% endif %}
+  >
+  </a>
+  <!-- go to the next page -->
+  <a class="w-100 rounded-0 {% if not pagination_images.has_next and not pagination_chapters.has_next %}btn disabled {% endif %}" 
+    {% if pagination_images.has_next %}
+      href="{{ url_for('manga.chapter', title = manga.title, volume = current_chapter.volume, chapter = current_chapter.chapter, page=pagination_images.next_num) }}"
+    {% elif not pagination_images.has_next and pagination_chapters.has_next %}
+      href="{{ url_for('manga.chapter', title = manga.title, volume = pagination_chapters.next().items[0].volume, chapter = pagination_chapters.next().items[0].chapter) }}"
+    {% endif %}
+  >
+  </a>
+</div>
+
+<!-- image on page -->
+<div class="d-flex justify-content-center mt-1">
+      <img class="vh-100" src="{{ pagination_images.items[0].image_url()}}" alt="...">
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+  document.addEventListener("keydown", function(event) {
+    switch(event.key) {
+    case "ArrowLeft":
+      // go to the prev page
+      {% if pagination_images.has_prev %}
+        location="{{ url_for('manga.chapter', title = manga.title, volume = current_chapter.volume, chapter = current_chapter.chapter, page=pagination_images.prev_num) }}"
+      {% elif not pagination_images.has_prev and pagination_chapters.has_prev %}
+        location="{{ url_for('manga.chapter', title = manga.title, volume = pagination_chapters.prev().items[0].volume, chapter = pagination_chapters.prev().items[0].chapter, page=pagination_chapters.prev().items[0].image.count()) }}"
+      {% endif %}
+      break;
+    case "ArrowRight":
+      // go to the next page
+      {% if pagination_images.has_next %}
+        location ="{{ url_for('manga.chapter', title = manga.title, volume = current_chapter.volume, chapter = current_chapter.chapter, page=pagination_images.next_num) }}"
+      {% elif not pagination_images.has_next and pagination_chapters.has_next %}
+        location ="{{ url_for('manga.chapter', title = manga.title, volume = pagination_chapters.next().items[0].volume, chapter = pagination_chapters.next().items[0].chapter) }}"
+      {% endif %}
+      break;
+    }
+  })
+</script>
+{% endblock scripts %}

@@ -134,17 +134,27 @@ def chapter(title, volume, chapter):
     manga = Manga.query.filter_by(title=title).first_or_404()
     
     current_chapter = manga.chapter.filter_by(
-            volume=volume,
-            chapter=chapter
-        ).first_or_404()
+        volume=volume,
+        chapter=chapter
+    ).first_or_404()
+    
+    pagination_images = current_chapter.image.paginate(
+        page=request.args.get('page', 0, type=int), 
+        per_page=1, 
+        error_out=False
+    )
 
     chapters = manga.chapter.all()
-    page = chapters.index(current_chapter) + 1
-    pagination = manga.chapter.paginate(
-        page,  per_page=1,
-        error_out=False)
-        
-    return render_template("chapter.html", pagination=pagination, manga=manga, title="Том " + current_chapter.volume + " Глава " + current_chapter.chapter)
+    pagination_chapters = manga.chapter.paginate(
+        page=chapters.index(current_chapter) + 1,  
+        per_page=1,
+        error_out=False
+    )
+    
+    title = f"Том {current_chapter.volume} Глава {current_chapter.chapter}"
+
+    return render_template("chapter.html", pagination_chapters=pagination_chapters, current_chapter=current_chapter, chapters=chapters, \
+                            pagination_images=pagination_images, manga=manga, title=title)
 
 @manga.route('/tag/<name>')
 def tag(name):
