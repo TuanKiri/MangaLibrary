@@ -2,6 +2,10 @@
   padding: 0 !important;
 }
 
+.fw-bold small {
+  font-weight: 400;
+}
+
 .fw-bold a {
   text-decoration: none;
 }
@@ -23,30 +27,14 @@
     brightness(102%) contrast(103%);
 }
 
-#footer-logo {
-  filter: invert(45%) sepia(26%) saturate(161%) hue-rotate(167deg)
-    brightness(94%) contrast(87%);
-}
-
-.circle .image-wrap {
-  -webkit-border-radius: 50em;
-  -moz-border-radius: 50em;
-  border-radius: 50em;
+.nav-link {
+  color: #fff !important;
 }
 
 .avatar {
   background-position: center;
   background-size: cover;
   transition: transform 0.5s ease-in-out;
-}
-
-.avatar-large {
-  width: 250px;
-  height: 250px;
-  border-radius: 125px;
-  -webkit-border-radius: 125px;
-  -moz-border-radius: 125px;
-  margin: 20px;
 }
 
 .avatar-small {
@@ -58,11 +46,11 @@
 }
 
 .avatar-header {
-    min-width: 22px;
-    min-height: 22px;
-    border-radius: 11px;
-    -webkit-border-radius: 11px;
-    -moz-border-radius: 11px;
+  min-width: 22px;
+  min-height: 22px;
+  border-radius: 11px;
+  -webkit-border-radius: 11px;
+  -moz-border-radius: 11px;
 }
 
 .avatar-user {
@@ -73,7 +61,7 @@
   -moz-border-radius: 4px;
 }
 
-.image_title {
+.background-user {
   background-position: center;
   background-size: cover;
   width: 100%;
@@ -86,73 +74,50 @@
   background-color: #f8f9fa;
 }
 
-.btn-light:hover {
-  background-color: #e9ecef;
-}
-
 .info-user:hover {
   background-color: transparent;
 }
 
-.fw-bold small {
-    font-weight: 400;
+.btn-light:hover {
+  background-color: #e9ecef;
 }
 
-.nav-link {
-    color: #fff !important;
+.btn-edit {
+  background-color: #00e676;
+  color: #fff;
 }
 
-.btn-subscription {
-    background-color: #00E676;
-    color: #fff;
-}
-
-.btn-subscription:hover {
-    background-color: #00C853;
-    color: #fff;
+.btn-edit:hover {
+  background-color: #00c853;
+  color: #fff;
 }
 
 .btn-edit-admin {
-    background-color: #FFA726;
-    color: #fff;
+  background-color: #ffa726;
+  color: #fff;
 }
 
 .btn-edit-admin:hover {
-    background-color: #FFCA28;
-    color: #fff;
+  background-color: #ffca28;
+  color: #fff;
 }
 
 .btn-ban {
-    background-color: #EF5350;
-    color: #fff;
+  background-color: #ef5350;
+  color: #fff;
 }
 
 .btn-ban:hover {
-    background-color: #F44336;
-    color: #fff;
+  background-color: #f44336;
+  color: #fff;
 }
 
-.media {
-  width: 250px;
+.btn-manga-subscribe {
+  background-color: #29b6f6;
+  color: #fff;
 }
 
-.page-img {
-  max-height: 100vh;
-}
-
-.page-img-nav {
-  border: 1px 0px 1px 0px;
-  border-radius: 0px;
-}
-
-.news-list a {
-  border: none;
-}
-
-.select {
-  max-width: 250px; 
-  border-radius: 0px !important;
-  border-left: 0px;
-  border-right: 0px;
-  border-color: #dee2e6 !important;
+.btn-manga-subscribe:hover {
+  background-color: #039be5;
+  color: #fff;
 }

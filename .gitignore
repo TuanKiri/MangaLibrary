@@ -15,5 +15,5 @@ upload-dev
 /migrations
 
 # Bootstrap 5
-app/static/css
-app/static/js
+app/static/css/bootstrap
+app/static/js/bootstrap

@@ -3,11 +3,13 @@
 
 {% block page_content %}
 <div class="d-flex">
-    <div class="container ps-0 d-flex flex-column media">
+    <div class="container ps-0 d-flex flex-column" style="width: 250px;">
         <img src="{{ manga.image_url() }}" alt="...">
         {% if current_user.is_authenticated and current_user.can(Permission.FOLLOW) %}
             {% if not current_user.is_reading(manga) %}
-                <a href="{{ url_for('.follow', title = manga.title) }}"  type="button" class="btn btn-subscription mt-2">Читать</a>
+                <a href="{{ url_for('.follow', title = manga.title) }}"  type="button" class="btn btn-manga-subscribe mt-2">
+                    Начать читать
+                </a>
             {% else %}
                 <a href="{{ url_for('.unfollow', title = manga.title) }}" type="button" class="btn btn-danger mt-2">Перестать читать</a>
             {% endif %}
