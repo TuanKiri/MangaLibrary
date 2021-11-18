@@ -1,4 +1,5 @@
 from ..comment.forms import CommentForm
+from datetime import datetime
 from .forms import EditMangaForm, EditChapterForm
 from . import manga
 from flask import render_template, redirect, url_for, flash, request,\
@@ -53,6 +54,7 @@ def edit(id):
         manga.tags_string=edit_manga_form.tags.data
         manga.catalog=edit_manga_form.catalog.data
         manga.user=current_user._get_current_object()
+        manga.timestamp = datetime.utcnow()
         if edit_manga_form.image.data:
             forder = str(manga.id)
             manga.image = manga_upload.save(edit_manga_form.image.data, folder=forder)

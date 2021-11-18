@@ -26,7 +26,7 @@
         <p class="card-text"><small class="text-muted">Автор: {{ manga.author }}</small></p>
         <p class="card-text"><small class="text-muted">Обновлено: {{ moment(manga.timestamp).fromNow() }}</small></p>
         {% if manga.user.id %}
-            <p class="card-text"><small class="text-muted">Добавил: <a href="{{ url_for('user.index', id = manga.user.id) }}">{{ manga.user.username }}</a></small></p>
+            <p class="card-text"><small class="text-muted">Обновил: <a href="{{ url_for('user.index', id = manga.user.id) }}">{{ manga.user.username }}</a></small></p>
         {% endif %}
         <p class="card-text"><small class="text-muted">Читают: {{ manga.users.count() }}</small></p>
         {% if current_user.is_authenticated and current_user.can(Permission.PUBLICATION) %}
