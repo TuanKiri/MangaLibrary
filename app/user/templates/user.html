@@ -20,18 +20,18 @@
         </div>
         {% if current_user.can(Permission.FOLLOW) and user != current_user and not user.banned %}
             {% if not current_user.is_following(user) %}
-                <a href="{{ url_for('user.follow', username = user.username) }}" type="button" class="btn btn-primary d-flex align-items-center"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill me-1" viewBox="0 0 16 16">
+                <a href="{{ url_for('user.follow', id = user.id) }}" type="button" class="btn btn-primary d-flex align-items-center"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill me-1" viewBox="0 0 16 16">
                     <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                     <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
                 </svg> Подписаться</a>
             {% else %}
-                <a href="{{ url_for('user.unfollow', username = user.username) }}" type="button" class="btn btn-danger d-flex align-items-center"> Отписаться</a>
+                <a href="{{ url_for('user.unfollow', id = user.id) }}" type="button" class="btn btn-danger d-flex align-items-center"> Отписаться</a>
             {% endif %}
             {% endif %}
             {% if current_user.is_administrator %}
-                <a type="button" href="{{ url_for('user.edit_profile_admin', username = user.username) }}" class="btn btn-edit-admin ms-2">Редактировать</a>
+                <a type="button" href="{{ url_for('user.edit_profile_admin', id = user.id) }}" class="btn btn-edit-admin ms-2">Редактировать</a>
             {% elif user == current_user %}
-                <a type="button" href="{{ url_for('user.edit', username=current_user.username) }}" class="btn btn-edit ms-2">Редактировать</a>
+                <a type="button" href="{{ url_for('user.edit', id=current_user.id) }}" class="btn btn-edit ms-2">Редактировать</a>
             {% endif %}
     </div>
     <hr class="my-2 text-muted">
@@ -73,29 +73,29 @@
 </div>
 <div class="d-flex justify-content-center pt-4">
     <div class="btn-group" role="group" aria-label="Basic example">
-        <a type="button" class="btn btn-{% if mode == 1 %}primary{% else %}light{% endif %}" href="{{ url_for('user.index', username = user.username, show = 1) }}" >Читает</a>
-        <a type="button" class="btn btn-{% if mode == 2 %}primary{% else %}light{% endif %}" href="{{ url_for('user.index', username = user.username, show = 2) }}" >Добавил</a>
-        <a type="button" class="btn btn-{% if mode == 3 %}primary{% else %}light{% endif %}" href="{{ url_for('user.index', username = user.username, show = 3) }}" >Комментарии</a>
-        <a type="button" class="btn btn-{% if mode == 4 %}primary{% else %}light{% endif %}" href="{{ url_for('user.index', username = user.username, show = 4) }}">Друзья</a>
+        <a type="button" class="btn btn-{% if show == 1 %}primary{% else %}light{% endif %}" href="{{ url_for('user.index', id = user.id, show = 1) }}" >Читает</a>
+        <a type="button" class="btn btn-{% if show == 2 %}primary{% else %}light{% endif %}" href="{{ url_for('user.index', id = user.id, show = 2) }}" >Добавил</a>
+        <a type="button" class="btn btn-{% if show == 3 %}primary{% else %}light{% endif %}" href="{{ url_for('user.index', id = user.id, show = 3) }}" >Комментарии</a>
+        <a type="button" class="btn btn-{% if show == 4 %}primary{% else %}light{% endif %}" href="{{ url_for('user.index', id = user.id, show = 4) }}">Друзья</a>
       </div>
 </div>
 
-{% if mode == 1 %}
+{% if show == 1 %}
 <h5 class="mb-3 mt-4">Читает</h5>
 {% include '_manga.html' %}
-{% elif mode == 2 %}
+{% elif show == 2 %}
 <h5 class="mb-3 mt-4">Добавил</h5>
 {% include '_manga.html' %}
-{% elif mode == 3 %}
+{% elif show == 3 %}
 <h5 class="mb-3 mt-4">Комментарии</h5>
 {% include '_comments.html' %}
-{% elif mode == 4 %} 
+{% elif show == 4 %} 
 <h5 class="mb-3 mt-4">Друзья</h5>
 {% include '_users.html' %}
 {% endif %}
 
 {% if pagination and pagination.pages > 1 %}
-    {{ macros.pagination_widget(pagination, '.index', username=user.username, show=show) }}
+    {{ macros.pagination_widget(pagination, '.index', id=user.id, show=show) }}
 {% endif %}
 
 {% endblock %}

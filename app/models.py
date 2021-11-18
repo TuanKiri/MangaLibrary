@@ -257,28 +257,22 @@ class User(UserMixin, db.Model):
         return self.followed.filter_by(
             id=user.id).first() is not None
 
-    def is_followed_by(self, user):
-        if user.id is None:
-            return False
-        return self.followers.filter_by(
-            id=user.id).first() is not None
-
     def read(self, manga):
         if not self.is_reading(manga):
             self.manga.append(manga)
             db.session.add(self)
 
     def unread(self, manga):
-        f = self.manga.filter_by(title=manga.title).first()
+        f = self.manga.filter_by(id=manga.id).first()
         if f:
-            self.manga.remove(manga)
+            self.manga.remove(f)
             db.session.add(self)
 
     def is_reading(self, manga):
         if manga.id is None:
             return False
         return self.manga.filter_by(
-            title=manga.title).first() is not None
+            id=manga.id).first() is not None
 
     def __repr__(self):
         return 'User %r' % self.id                

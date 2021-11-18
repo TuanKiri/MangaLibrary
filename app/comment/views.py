@@ -7,12 +7,12 @@ from ..decorators import permission_required
 from . import comment
 
 
-@comment.route('/add_manga_comment/<title>', methods=['GET', 'POST'])
+@comment.route('/add_manga_comment/<int:id>', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.COMMENT)
-def add_manga_comment(title):
+def add_manga_comment(id):
     comment_form = CommentForm()
-    manga = Manga.query.filter_by(title=title).first_or_404()
+    manga = Manga.query.get_or_404(id)
     if comment_form.comment.data:
         comment = Comment(
             user=current_user._get_current_object(), 
@@ -21,14 +21,14 @@ def add_manga_comment(title):
         db.session.add(comment)
         db.session.commit()
         flash('Комментарий добавлен', 'success')
-    return redirect(url_for('manga.index', title=manga.title))
+    return redirect(url_for('manga.index', id=manga.id))
 
-@comment.route('/add_news_comment/<title>', methods=['GET', 'POST'])
+@comment.route('/add_news_comment/<int:id>', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.COMMENT)
-def add_news_comment(title):
+def add_news_comment(id):
     comment_form = CommentForm()
-    news = News.query.filter_by(title=title).first_or_404()
+    news = News.query.get_or_404(id)
     if comment_form.comment.data:
         comment = Comment(
             user=current_user._get_current_object(), 
@@ -37,7 +37,7 @@ def add_news_comment(title):
         db.session.add(comment)
         db.session.commit()
         flash('Комментарий добавлен', 'success')
-    return redirect(url_for('news.index', title=news.title))
+    return redirect(url_for('news.index', id=news.id))
 
 @comment.route('/moderate')
 @login_required

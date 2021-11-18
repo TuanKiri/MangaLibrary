@@ -7,11 +7,11 @@
         <img src="{{ manga.image_url() }}" alt="...">
         {% if current_user.is_authenticated and current_user.can(Permission.FOLLOW) %}
             {% if not current_user.is_reading(manga) %}
-                <a href="{{ url_for('.follow', title = manga.title) }}"  type="button" class="btn btn-manga-subscribe mt-2">
+                <a href="{{ url_for('.follow', id = manga.id) }}"  type="button" class="btn btn-manga-subscribe mt-2">
                     Начать читать
                 </a>
             {% else %}
-                <a href="{{ url_for('.unfollow', title = manga.title) }}" type="button" class="btn btn-danger mt-2">Перестать читать</a>
+                <a href="{{ url_for('.unfollow', id = manga.id) }}" type="button" class="btn btn-danger mt-2">Перестать читать</a>
             {% endif %}
         {% endif %}
     </div>
@@ -25,27 +25,29 @@
         {% endif %}
         <p class="card-text"><small class="text-muted">Автор: {{ manga.author }}</small></p>
         <p class="card-text"><small class="text-muted">Обновлено: {{ moment(manga.timestamp).fromNow() }}</small></p>
-        <p class="card-text"><small class="text-muted">Добавил: <a href="{{ url_for('user.index', username = manga.user.username) }}">{{ manga.user.username }}</a></small></p>
+        {% if manga.user.id %}
+            <p class="card-text"><small class="text-muted">Добавил: <a href="{{ url_for('user.index', id = manga.user.id) }}">{{ manga.user.username }}</a></small></p>
+        {% endif %}
         <p class="card-text"><small class="text-muted">Читают: {{ manga.users.count() }}</small></p>
         {% if current_user.is_authenticated and current_user.can(Permission.PUBLICATION) %}
             <div class="d-flex my-2 justify-content-center">
-                <a  type="button" href="{{ url_for('.edit', title = manga.title) }}" class="btn btn-primary mt-2">Редактировать</a>
+                <a  type="button" href="{{ url_for('.edit', id = manga.id) }}" class="btn btn-primary mt-2">Редактировать</a>
             </div>
         {% endif %}
         <h6>Главы:</h6>
         <div class="list-group">
             {% for chapter in manga.chapter.all() %}
-                <a href="{{ url_for('manga.chapter', title = manga.title, volume = chapter.volume, chapter = chapter.chapter) }}" type="button" class="list-group-item list-group-item-action">Том {{ chapter.volume }} Глава {{ chapter.chapter }} {{ chapter.title}}</a>
+                <a href="{{ url_for('manga.chapter', id = manga.id, volume = chapter.volume, chapter = chapter.chapter) }}" type="button" class="list-group-item list-group-item-action">Том {{ chapter.volume }} Глава {{ chapter.chapter }} {{ chapter.title}}</a>
             {% endfor %}
         </div>
         {% if current_user.is_authenticated and current_user.can(Permission.PUBLICATION) %}
             <div class="d-flex mt-2 justify-content-center">
-                <a  type="button" href="{{ url_for('manga.add_chapter', title = manga.title) }}" class="btn btn-primary mt-2">Добавить главу</a>
+                <a  type="button" href="{{ url_for('manga.add_chapter', id = manga.id) }}" class="btn btn-primary mt-2">Добавить главу</a>
             </div>
         {% endif %}
         <h6 class="mb-3 mt-4">Комментарии:</h6>
         {% if current_user.is_authenticated and current_user.can(Permission.COMMENT)%}
-            <form action="{{ url_for('comment.add_manga_comment', title=manga.title) }}" method="post">
+            <form action="{{ url_for('comment.add_manga_comment', id=manga.id) }}" method="post">
                 {{ comment_form.hidden_tag() }}
                 {{ comment_form.comment(class_="form-control", placeholder="Комментарий") }}
                 <div class="d-flex justify-content-end my-2">
@@ -56,6 +58,6 @@
         {% include '_comments.html' %}
 
         {% if pagination and pagination.pages > 1 %}
-        {{ macros.pagination_widget(pagination, '.index', title=manga.title) }}
+        {{ macros.pagination_widget(pagination, '.index', id=manga.id) }}
         {% endif %}
 {% endblock %}

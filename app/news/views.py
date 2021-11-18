@@ -10,10 +10,10 @@ from ..models import News, Images, Comment
 from ..decorators import admin_required
 
 
-@news.route('/<title>')
-def index(title):
+@news.route('/<int:id>')
+def index(id):
     comment_form = CommentForm()
-    news= News.query.filter_by(title=title).first_or_404()
+    news= News.query.get_or_404(id)
     page = request.args.get('page', 1, type=int)
     pagination = news.comments.order_by(Comment.timestamp.desc()).paginate(
         page, per_page=current_app.config['MANGA_COMMENTS_PER_PAGE'],
@@ -34,7 +34,7 @@ def add():
         )
         for file in request.files.getlist("image"):
             if file.filename:
-                forder = str(news_form.title.data)
+                forder = str(news.id)
                 image = Images(
                     image = news_upload.save(file, folder=forder),
                     news=news
@@ -43,5 +43,5 @@ def add():
         db.session.add(news)
         db.session.commit()
         flash('Новость опубликована.', 'success')
-        return redirect(url_for('.index', title=news.title))
+        return redirect(url_for('.index', id=news.id))
     return render_template('add_news.html', news_form=news_form, title=u"Создать новость")

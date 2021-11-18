@@ -17,7 +17,7 @@
 {% block navbar %}
 <nav class="navbar bg-primary py-0 navbar-expand-md navbar-dark">
   <!-- return to manga page -->
-  <a class="btn btn-primary d-flex align-self-stretch align-items-center rounded-0" href="{{ url_for('manga.index', title = manga.title) }}">
+  <a class="btn btn-primary d-flex align-self-stretch align-items-center rounded-0" href="{{ url_for('manga.index', id = manga.id) }}">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-square-fill" viewBox="0 0 16 16">
       <path d="M16 14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12zm-4.5-6.5H5.707l2.147-2.146a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L5.707 8.5H11.5a.5.5 0 0 0 0-1z"/>
     </svg>
@@ -28,7 +28,7 @@
   <!-- go to the prev chapter -->
   <a class="btn btn-primary d-flex align-self-stretch align-items-center px-1 rounded-0 {% if not pagination_chapters.has_prev %} disabled {% endif %}" 
     {% if pagination_chapters.has_prev %}
-      href="{{ url_for('manga.chapter', title = manga.title, volume = pagination_chapters.prev().items[0].volume, chapter = pagination_chapters.prev().items[0].chapter, page=pagination_chapters.prev().items[0].image.count()) }}"
+      href="{{ url_for('manga.chapter', id = manga.id, volume = pagination_chapters.prev().items[0].volume, chapter = pagination_chapters.prev().items[0].chapter, page=pagination_chapters.prev().items[0].image.count()) }}"
     {% endif %}
   >
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
@@ -38,7 +38,7 @@
   <!-- selecting a chapter -->
   <select class="w-auto btn form-control btn-primary px-1 rounded-0" onchange="location = this.value;" aria-label="Default select example">
     {% for chapter in chapters %}
-      <option class="bg-white text-dark" value="{{ url_for('manga.chapter', title = manga.title, volume = chapter.volume, chapter = chapter.chapter) }}" 
+      <option class="bg-white text-dark" value="{{ url_for('manga.chapter', id = manga.id, volume = chapter.volume, chapter = chapter.chapter) }}" 
         {% if current_chapter.volume == chapter.volume and current_chapter.chapter == chapter.chapter  %} 
           selected 
         {% endif %}
@@ -50,7 +50,7 @@
   <!-- go to the next chapter -->
   <a class="btn btn-primary d-flex align-self-stretch align-items-center px-1 rounded-0 {% if not pagination_chapters.has_next %} disabled {% endif %}" 
     {% if pagination_chapters.has_next %}
-      href="{{ url_for('manga.chapter', title = manga.title, volume = pagination_chapters.next().items[0].volume, chapter = pagination_chapters.next().items[0].chapter) }}"
+      href="{{ url_for('manga.chapter', id = manga.id, volume = pagination_chapters.next().items[0].volume, chapter = pagination_chapters.next().items[0].chapter) }}"
     {% endif %}
   >
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
@@ -60,7 +60,7 @@
   <!-- selecting a page -->
   <select class="form-control btn-primary w-auto border-0 rounded-0 ms-4" onchange="location = this.value;" aria-label="Default select example">
     {% for p in range(1, pagination_images.total + 1)%}
-      <option class="bg-white text-dark" value="{{ url_for('manga.chapter', title = manga.title, volume = current_chapter.volume, chapter = current_chapter.chapter, page=p) }}" 
+      <option class="bg-white text-dark" value="{{ url_for('manga.chapter', id = manga.id, volume = current_chapter.volume, chapter = current_chapter.chapter, page=p) }}" 
         {% if p == pagination_images.page  %} 
           selected 
         {% endif %}
@@ -77,18 +77,18 @@
   <!-- go to the prev page -->
   <a class="w-100 rounded-0 {% if not pagination_images.has_prev and not pagination_chapters.has_prev %}btn disabled {% endif %}" 
     {% if pagination_images.has_prev %}
-      href="{{ url_for('manga.chapter', title = manga.title, volume = current_chapter.volume, chapter = current_chapter.chapter, page=pagination_images.prev_num) }}"
+      href="{{ url_for('manga.chapter', id = manga.id, volume = current_chapter.volume, chapter = current_chapter.chapter, page=pagination_images.prev_num) }}"
     {% elif not pagination_images.has_prev and pagination_chapters.has_prev %}
-      href="{{ url_for('manga.chapter', title = manga.title, volume = pagination_chapters.prev().items[0].volume, chapter = pagination_chapters.prev().items[0].chapter, page=pagination_chapters.prev().items[0].image.count()) }}"
+      href="{{ url_for('manga.chapter', id = manga.id, volume = pagination_chapters.prev().items[0].volume, chapter = pagination_chapters.prev().items[0].chapter, page=pagination_chapters.prev().items[0].image.count()) }}"
     {% endif %}
   >
   </a>
   <!-- go to the next page -->
   <a class="w-100 rounded-0 {% if not pagination_images.has_next and not pagination_chapters.has_next %}btn disabled {% endif %}" 
     {% if pagination_images.has_next %}
-      href="{{ url_for('manga.chapter', title = manga.title, volume = current_chapter.volume, chapter = current_chapter.chapter, page=pagination_images.next_num) }}"
+      href="{{ url_for('manga.chapter', id = manga.id, volume = current_chapter.volume, chapter = current_chapter.chapter, page=pagination_images.next_num) }}"
     {% elif not pagination_images.has_next and pagination_chapters.has_next %}
-      href="{{ url_for('manga.chapter', title = manga.title, volume = pagination_chapters.next().items[0].volume, chapter = pagination_chapters.next().items[0].chapter) }}"
+      href="{{ url_for('manga.chapter', id = manga.id, volume = pagination_chapters.next().items[0].volume, chapter = pagination_chapters.next().items[0].chapter) }}"
     {% endif %}
   >
   </a>
@@ -108,17 +108,17 @@
     case "ArrowLeft":
       // go to the prev page
       {% if pagination_images.has_prev %}
-        location="{{ url_for('manga.chapter', title = manga.title, volume = current_chapter.volume, chapter = current_chapter.chapter, page=pagination_images.prev_num) }}"
+        location="{{ url_for('manga.chapter', id = manga.id, volume = current_chapter.volume, chapter = current_chapter.chapter, page=pagination_images.prev_num) }}"
       {% elif not pagination_images.has_prev and pagination_chapters.has_prev %}
-        location="{{ url_for('manga.chapter', title = manga.title, volume = pagination_chapters.prev().items[0].volume, chapter = pagination_chapters.prev().items[0].chapter, page=pagination_chapters.prev().items[0].image.count()) }}"
+        location="{{ url_for('manga.chapter', id = manga.id, volume = pagination_chapters.prev().items[0].volume, chapter = pagination_chapters.prev().items[0].chapter, page=pagination_chapters.prev().items[0].image.count()) }}"
       {% endif %}
       break;
     case "ArrowRight":
       // go to the next page
       {% if pagination_images.has_next %}
-        location ="{{ url_for('manga.chapter', title = manga.title, volume = current_chapter.volume, chapter = current_chapter.chapter, page=pagination_images.next_num) }}"
+        location ="{{ url_for('manga.chapter', id = manga.id, volume = current_chapter.volume, chapter = current_chapter.chapter, page=pagination_images.next_num) }}"
       {% elif not pagination_images.has_next and pagination_chapters.has_next %}
-        location ="{{ url_for('manga.chapter', title = manga.title, volume = pagination_chapters.next().items[0].volume, chapter = pagination_chapters.next().items[0].chapter) }}"
+        location ="{{ url_for('manga.chapter', id = manga.id, volume = pagination_chapters.next().items[0].volume, chapter = pagination_chapters.next().items[0].chapter) }}"
       {% endif %}
       break;
     }

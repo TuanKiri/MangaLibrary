@@ -4,7 +4,7 @@
         <div class="avatar avatar-small" style="background-image: url({{ item.avatar_url() }})">
         </div>
         <div class="ms-3 me-auto">
-            <div class="fw-bold"><a class="link-dark" href="{{ url_for('user.index', username = item.username) }}">{{ item.username }}</a>                 
+            <div class="fw-bold"><a class="link-dark" href="{{ url_for('user.index', id = item.id) }}">{{ item.username }}</a>                 
                 {% if item.is_administrator %} 
                     <small class="text-muted"> •</small> <small class="text-primary"> {{ item.role.name }}</small>
                 {% endif %}

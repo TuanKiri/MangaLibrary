@@ -7,7 +7,7 @@
             </td>
             <td>
                 <div class="card-body pt-0">
-                    <h6 class="card-title"><a class="link-dark" href="{{ url_for('manga.index', title = item.title) }}">{{ item.title }}</a></h6>
+                    <h6 class="card-title"><a class="link-dark" href="{{ url_for('manga.index', id = item.id) }}">{{ item.title }}</a></h6>
                     <p class="card-text">{{ item.catalog }}</p>
                     {% if item.tags.count() %}
                         {% for tag in item.tags %}

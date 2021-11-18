@@ -13,7 +13,7 @@
       <div class="card h-100">
         <img src="{{ p.Manga.image_url() }}" alt="...">
         <div class="card-body d-flex align-items-center justify-content-center">
-            <h6 class="card-title mb-0"><a class="link-dark" href="{{ url_for('manga.index', title=p.Manga.title) }}">{{ p.Manga.title }}</a></h6>
+            <h6 class="card-title mb-0"><a class="link-dark" href="{{ url_for('manga.index', id=p.Manga.id) }}">{{ p.Manga.title }}</a></h6>
         </div>
         <div class="card-footer">
           <small class="text-muted">Обновлено: {{ moment(p.Manga.timestamp).fromNow() }}</small>
@@ -28,7 +28,7 @@
             <h6 class="mb-3 mt-4">Последние новости</h6>
             <div class="list-group">
               {% for item in news %}
-              <a href="{{ url_for('news.index', title = item.title) }}" class="list-group-item list-group-item-action">
+              <a href="{{ url_for('news.index', id = item.id) }}" class="list-group-item list-group-item-action">
                   <div class="d-flex w-100 justify-content-between">
                       <h6>{{ item.title }}</h6>
                       <small class="text-muted">{{ moment(item.timestamp).fromNow() }}</small>
@@ -59,7 +59,7 @@
                       <div class="ms-2 me-auto">
                           <div class="fw-bold"> 
                             <h6 class="mb-1">
-                              <a class="link-dark" href="{{ url_for('user.index', username = user.User.username) }}">
+                              <a class="link-dark" href="{{ url_for('user.index', id = user.User.id) }}">
                                 {{ user.User.username }}
                               </a>
                             </h6>
@@ -95,7 +95,7 @@
             <img src="{{ c.Manga.image_url() }}" style="width: 65px" alt="...">
           </div>
           <div class="ms-2">
-            <h6 class="card-title"><a class="link-dark" href="{{ url_for('manga.index', title=c.Manga.title) }}">{{ c.Manga.title }}</a></h6>
+            <h6 class="card-title"><a class="link-dark" href="{{ url_for('manga.index', id=c.Manga.id) }}">{{ c.Manga.title }}</a></h6>
             <p class="mb-0">Том {{c.Chapter.volume}} Глава {{c.Chapter.chapter}}</p>
             <small class="text-muted">Читают: {{ c.Manga.users.count() }}</small>
           </div>
@@ -105,11 +105,11 @@
         {% for discussion in popular_discussion %}
         <p class="card-title mb-0">
           {% if discussion.type == 'manga' %}
-            <a class="link-dark" href="{{ url_for('manga.index', title=discussion.title) }}">{{ discussion.title }}</a>
+            <a class="link-dark" href="{{ url_for('manga.index', id=discussion.id) }}">{{ discussion.title }}</a>
             <small><span class="badge bg-primary">манга</span></small>
           {% endif %}
           {% if discussion.type == 'news' %}
-            <a class="link-dark" href="{{ url_for('news.index', title=discussion.title) }}">{{ discussion.title }}</a>
+            <a class="link-dark" href="{{ url_for('news.index', id=discussion.id) }}">{{ discussion.title }}</a>
             <small><span class="badge bg-info">новости</span></small>
           {% endif %}
         </p>

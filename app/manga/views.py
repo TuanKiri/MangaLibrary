@@ -8,10 +8,10 @@ from .. import db, manga_upload
 from ..models import Manga, Permission, Images, Chapter, Comment, Tag
 from ..decorators import permission_required
 
-@manga.route('/<title>')
-def index(title):
+@manga.route('/<int:id>')
+def index(id):
     comment_form = CommentForm()
-    manga = Manga.query.filter_by(title=title).first_or_404()
+    manga = Manga.query.get_or_404(id)
     page = request.args.get('page', 1, type=int)
     pagination = manga.comments.order_by(Comment.timestamp.desc()).paginate(
         page, per_page=current_app.config['MANGA_COMMENTS_PER_PAGE'],
@@ -32,20 +32,20 @@ def add():
             user=current_user._get_current_object()
         )
         if edit_manga_form.image.data:
-            forder = str(edit_manga_form.title.data)
+            forder = str(manga.id)
             manga.image = manga_upload.save(edit_manga_form.image.data, folder=forder)
         db.session.add(manga)
         db.session.commit()
         flash('Манга %s добавлена.'% manga.title, 'success')
-        return redirect(url_for('.index', title=manga.title))
+        return redirect(url_for('.index', id=manga.id))
     return render_template("add_manga.html", edit_manga_form=edit_manga_form, title="Добавить мангу")
 
 
-@manga.route('/edit/<title>', methods=['GET', 'POST'])
+@manga.route('/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.PUBLICATION)
-def edit(title):
-    manga = Manga.query.filter_by(title=title).first_or_404()
+def edit(id):
+    manga = Manga.query.get_or_404(id)
     edit_manga_form = EditMangaForm()
     if edit_manga_form.validate_on_submit():
         manga.title=edit_manga_form.title.data
@@ -54,12 +54,12 @@ def edit(title):
         manga.catalog=edit_manga_form.catalog.data
         manga.user=current_user._get_current_object()
         if edit_manga_form.image.data:
-            forder = str(edit_manga_form.title.data)
+            forder = str(manga.id)
             manga.image = manga_upload.save(edit_manga_form.image.data, folder=forder)
         db.session.add(manga)
         db.session.commit()
         flash('Манга %s обновлена.'% manga.title, 'success')
-        return redirect(url_for('.index', title=manga.title))
+        return redirect(url_for('.index', id=manga.id))
     edit_manga_form.title.data = manga.title
     edit_manga_form.author.data = manga.author
     edit_manga_form.tags.data = manga.tags_string
@@ -67,45 +67,39 @@ def edit(title):
     return render_template("add_manga.html", edit_manga_form=edit_manga_form, manga=manga, title=manga.title)
 
 
-@manga.route('/read/<title>')
+@manga.route('/read/<int:id>')
 @login_required
 @permission_required(Permission.FOLLOW)
-def follow(title):
-    manga = Manga.query.filter_by(title=title).first_or_404()
-    if manga is None:
-        flash('Такой манги нет.', 'alert')
-        return redirect(url_for('main.index'))
+def follow(id):
+    manga = Manga.query.get_or_404(id)
     if current_user.is_reading(manga):
         flash('Вы уже подписаны.', 'warning')
-        return redirect(url_for('.index', title=manga.title))
+        return redirect(url_for('.index', id=manga.id))
     current_user.read(manga)
     db.session.commit()
     flash('Вы теперь подписаны на %s.' % manga.title, 'success')
-    return redirect(url_for('.index', title=manga.title))
+    return redirect(url_for('.index', id=manga.id))
 
 
-@manga.route('/unread/<title>')
+@manga.route('/unread/<int:id>')
 @login_required
 @permission_required(Permission.FOLLOW)
-def unfollow(title):
-    manga = Manga.query.filter_by(title=title).first_or_404()
-    if manga is None:
-        flash('Такой манги нет.', 'alert')
-        return redirect(url_for('main.index'))
+def unfollow(id):
+    manga = Manga.query.get_or_404(id)
     if not current_user.is_reading(manga):
         flash('Вы уже подписаны.', 'warning')
-        return redirect(url_for('.index', title=manga.title))
+        return redirect(url_for('.index', id=manga.id))
     current_user.unread(manga)
     db.session.commit()
     flash('Вы больше не подписаны на %s.' % manga.title, 'success')
-    return redirect(url_for('.index', title=manga.title))
+    return redirect(url_for('.index', id=manga.id))
 
 
-@manga.route('/add_chapter/<title>', methods=['GET', 'POST'])
+@manga.route('/add_chapter/<int:id>', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.PUBLICATION)
-def add_chapter(title):
-    manga = Manga.query.filter_by(title=title).first_or_404()
+def add_chapter(id):
+    manga = Manga.query.get_or_404(id)
     edit_chapter_form = EditChapterForm()
     if edit_chapter_form.validate_on_submit():
         chapter = Chapter(
@@ -117,7 +111,7 @@ def add_chapter(title):
         )
         for file in request.files.getlist("image"):
             if file.filename:
-                forder = manga.title + "/" + str(edit_chapter_form.volume.data) + "/" + str(edit_chapter_form.chapter.data)
+                forder = str(manga.id) + "/" + str(edit_chapter_form.volume.data) + "/" + str(edit_chapter_form.chapter.data)
                 image = Images(
                     image = manga_upload.save(file, folder=forder),
                     chapter=chapter
@@ -126,12 +120,12 @@ def add_chapter(title):
         db.session.add(chapter)
         db.session.commit()
         flash('Глава опубликована.', 'success')
-        return redirect(url_for('.index', title=manga.title))
-    return render_template("add_chapter.html", edit_chapter_form=edit_chapter_form, title=manga.title)
+        return redirect(url_for('.index', id=manga.id))
+    return render_template("add_chapter.html", edit_chapter_form=edit_chapter_form, manga=manga, title=manga.title)
 
-@manga.route('<title>/<volume>/<chapter>')
-def chapter(title, volume, chapter):
-    manga = Manga.query.filter_by(title=title).first_or_404()
+@manga.route('<int:id>/<int:volume>/<int:chapter>')
+def chapter(id, volume, chapter):
+    manga = Manga.query.get_or_404(id)
     
     current_chapter = manga.chapter.filter_by(
         volume=volume,

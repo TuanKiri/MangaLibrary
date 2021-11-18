@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 @main.route('/')
 def index():
     search_form = SearchForm()
-    theme = bool(request.cookies.get('theme', ''))
+
     manga = Manga.query.order_by(Manga.timestamp.desc())
 
     popular_manga = db.session.query(Manga, db.func.count(logs.c.user_id).label('popular')) \
@@ -33,10 +33,10 @@ def index():
                                 .limit(10)
     news = News.query.order_by(News.timestamp.desc()).limit(5)
 
-    manga_discussion = db.session.query(Manga.title, db.literal('manga').label('type'), db.func.count().label('popular')) \
+    manga_discussion = db.session.query(Manga.id, Manga.title, db.literal('manga').label('type'), db.func.count().label('popular')) \
                                 .join(Comment) \
                                 .group_by(Comment.manga_id).filter(Comment.timestamp >= datetime.now() - timedelta(days=1))
-    news_discussion = db.session.query(News.title, db.literal('news').label('type'), db.func.count().label('popular')) \
+    news_discussion = db.session.query(News.id, News.title, db.literal('news').label('type'), db.func.count().label('popular')) \
                                 .join(Comment) \
                                 .group_by(Comment.news_id).filter(Comment.timestamp >= datetime.now() - timedelta(days=1))
     popular_discussion = news_discussion.union(manga_discussion).order_by(db.text('popular DESC')).limit(5)
@@ -45,7 +45,7 @@ def index():
     pagination = manga.paginate(
     page, per_page=current_app.config['MANGA_LIST_PER_PAGE'],
     error_out=False)
-    return render_template('index.html', search_form=search_form, theme=theme, popular_manga=popular_manga, popular_users=popular_users, \
+    return render_template('index.html', search_form=search_form, popular_manga=popular_manga, popular_users=popular_users, \
                             news=news, popular_tags=popular_tags, new_chapter=new_chapter, popular_discussion=popular_discussion, pagination=pagination, title="Главная")
 
 
