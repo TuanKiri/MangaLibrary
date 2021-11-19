@@ -2,11 +2,11 @@
 {% import "_macros.html" as macros %}
 
 {% block page_content %}
-<h5 class="mb-3 mt-4">Тег: {{ name }}</h5>
+<h5 class="mb-3 mt-4">Тег: {{ tag.name }}</h5>
    
 {% include '_manga.html' %}
 
 {% if pagination and pagination.pages > 1 %}
-{{ macros.pagination_widget(pagination, '.tag', name=name) }}
+{{ macros.pagination_widget(pagination, '.tag', id=tag.id) }}
 {% endif %}
 {% endblock %}

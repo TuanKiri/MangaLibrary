@@ -11,7 +11,7 @@
                     <p class="card-text">{{ item.catalog }}</p>
                     {% if item.tags.count() %}
                         {% for tag in item.tags %}
-                            <a type="button" href="{{ url_for('manga.tag', name = tag.name) }}" class="btn btn-light mb-2">{{ tag.name }}</a>
+                            <a type="button" href="{{ url_for('manga.tag', id = tag.id) }}" class="btn btn-light mb-2">{{ tag.name }}</a>
                         {% endfor %}
                     {% endif %}
                     <p class="card-text"><small class="text-muted">Обновлено: {{ moment(item.timestamp).fromNow() }}</small></p>

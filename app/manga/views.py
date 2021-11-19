@@ -152,13 +152,15 @@ def chapter(id, volume, chapter):
     return render_template("chapter.html", pagination_chapters=pagination_chapters, current_chapter=current_chapter, chapters=chapters, \
                             pagination_images=pagination_images, manga=manga, title=title)
 
-@manga.route('/tag/<name>')
-def tag(name):
-    manga =  Manga.query.filter(Manga.tags.any(Tag.name.ilike(name))) \
+@manga.route('/tag/<int:id>')
+def tag(id):
+    tag = Tag.query.get_or_404(id)
+    manga =  Manga.query.filter(Manga.tags.any(Tag.id == tag.id)) \
                         .group_by(Manga.id) \
                         .order_by(Manga.timestamp.desc())
 
     page = request.args.get('page', 1, type=int)
     pagination = manga.paginate(
-    page, per_page=3, error_out=False)
-    return render_template('tag.html', pagination=pagination, name=name)
+    page, per_page=current_app.config['MANGA_LIST_PER_PAGE'], 
+    error_out=False)
+    return render_template('tag.html', pagination=pagination, tag=tag)
