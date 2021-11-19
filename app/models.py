@@ -300,16 +300,14 @@ class Manga(db.Model):
 
     @tags_string.setter
     def tags_string(self, value):
-        if value:
-            self.tags = []
-            tags_list = value.replace(' ', '').split(',')
+        self.tags = []
+        tags_list = [tag.strip() for tag in value.split(',') if len(tag.strip()) > 0]
+        if len(tags_list) > 0:
             for str in tags_list:
                 tag = Tag.query.filter(Tag.name.ilike(str)).first()
                 if tag is None:
                     tag = Tag(name=str)
-
                 self.tags.append(tag)
-
             db.session.add(self)
             db.session.commit()
 
