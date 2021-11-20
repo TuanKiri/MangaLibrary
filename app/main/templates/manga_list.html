@@ -11,7 +11,7 @@
 {% include '_manga.html' %}
 
 {% if pagination and pagination.pages > 1 %}
-{{ macros.pagination_widget(pagination, '.manga_list') }}
+{{ macros.pagination_widget(pagination, '.manga_list', search=search_form.search.data ) }}
 {% endif %}
 
 {% endblock %}

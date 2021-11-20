@@ -72,6 +72,7 @@ def tags_list():
     tags = Tag.query
     if search_word:
         tags = tags.filter(Tag.name.ilike('%' + search_word + '%'))
+        search_form.search.data = search_word
     page = request.args.get('page', 1, type=int)
     pagination = tags.paginate(
     page, per_page=current_app.config['TAGS_LIST_PER_PAGE'],
@@ -85,6 +86,7 @@ def users_list():
     users = User.query
     if search_word:
         users = users.filter(User.username.ilike('%' + search_word + '%'))
+        search_form.search.data = search_word
     page = request.args.get('page', 1, type=int)
     pagination = users.paginate(
     page, per_page=current_app.config['USER_LIST_PER_PAGE'],
