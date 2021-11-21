@@ -26,7 +26,7 @@ pip install -r requirements.txt
 python db_create.py
 ```
 
-Download Bootstrap 5 and add in static/bootstrap/js, static/bootstrap/css.
+Download Bootstrap 5 and add in app/static/js/bootstrap/, app/static/css/bootstrap/.
 
 ```cmd
 $env:FLASK_APP = 'run.py'

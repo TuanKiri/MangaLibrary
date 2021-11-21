@@ -11,7 +11,7 @@
 
 {% block styles %}
     <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
-    <link href="{{ url_for('static',filename='css/bootstrap/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/bootstrap/css/bootstrap.css') }}" rel="stylesheet">
     <link href="{{ url_for('static',filename='css/main.css') }}" rel="stylesheet">
 {% endblock %}
 {% block navbar %}
@@ -101,5 +101,5 @@
 {{ super() }}
 {{ moment.include_moment() }}
 {{ moment.lang('ru') }}
-<script src="{{ url_for('static',filename='js/bootstrap/bootstrap.js') }}"></script>
+<script src="{{ url_for('static',filename='js/bootstrap/js/bootstrap.js') }}"></script>
 {% endblock %}
