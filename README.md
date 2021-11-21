@@ -22,7 +22,11 @@ python -m venv env
 .\env\Scripts\activate
 
 pip install -r requirements.txt
+```
 
+⚠️ [Bugs in flask_uploads package](https://stackoverflow.com/questions/61628503/flask-uploads-importerror-cannot-import-name-secure-filename)
+
+```
 python db_create.py
 ```
 
