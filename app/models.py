@@ -69,13 +69,13 @@ class Role(db.Model):
 follows = db.Table('follows',
                     db.Column('follower_id', db.Integer, db.ForeignKey('users.id')),
                     db.Column('followed_id', db.Integer, db.ForeignKey('users.id')),
-                    db.Column('timestamp', db.DateTime, default=datetime.now())
+                    db.Column('timestamp', db.DateTime, default=datetime.utcnow())
                     )
 
 logs = db.Table('logs',
                     db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
                     db.Column('manga_id', db.Integer, db.ForeignKey('manga.id')),
-                    db.Column('timestamp', db.DateTime, default=datetime.now())
+                    db.Column('timestamp', db.DateTime, default=datetime.utcnow())
                     )
 
 
