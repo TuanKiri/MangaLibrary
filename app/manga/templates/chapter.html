@@ -23,7 +23,9 @@
     </svg>
   </a>
   <div class="text-white bg-primary mx-4">
-    {{manga.title}}
+    {% if manga.title %}
+      {{manga.title}}
+    {% endif %}
   </div>
   <!-- go to the prev chapter -->
   <a class="btn btn-primary d-flex align-self-stretch align-items-center px-1 rounded-0 {% if not pagination_chapters.has_prev %} disabled {% endif %}" 
@@ -96,7 +98,9 @@
 
 <!-- image on page -->
 <div class="d-flex justify-content-center mt-1">
-      <img class="vh-100" src="{{ pagination_images.items[0].image_url()}}" alt="...">
+  {% if pagination_images.items[0] %}
+    <img class="vh-100" src="{{ pagination_images.items[0].image_url()}}" alt="...">
+  {% endif %}
 </div>
 {% endblock %}
 

@@ -20,8 +20,8 @@ class EditMangaForm(FlaskForm):
             raise ValidationError('Манга существует.')
 
 class EditChapterForm(FlaskForm):
-    volume = StringField('Том', validators=[Length(0, 32, message='От 0 до 32 символов длиной')])
-    chapter = StringField('Глава', validators=[Length(0, 32, message='От 0 до 32 символов длиной')])
+    volume = StringField('Том', validators=[Length(1, 32, message='От 1 до 32 символов длиной')])
+    chapter = StringField('Глава', validators=[Length(1, 32, message='От 1 до 32 символов длиной')])
     title = StringField('Название',
                         validators=[Length(0, 128, message='До 128 символов длиной')])
     image = MultipleFileField('', id="formFileMultiple", validators=[FileAllowed(manga_upload, message='Только изображения')])
