@@ -26,8 +26,8 @@ class RegistrationForm(FlaskForm):
     recaptcha = RecaptchaField()
     submit = SubmitField('Зарегистрироваться')
 
-    def validate_email(self, filed):
-        if User.query.filter(db.func.lower(User.email) == db.func.lower(filed.data)).first():
+    def validate_email(self, field):
+        if User.query.filter_by(email=field.data.lower()).first():
             raise ValidationError('Почта уже используется')
 
     def validate_username(self, field):
