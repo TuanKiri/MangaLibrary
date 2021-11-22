@@ -37,8 +37,28 @@ $env:FLASK_APP = 'run.py'
 
 flask run
 ```
+## Testing
 
-<details><summary>Screenshots</summary>
+Run unittest:
+
+```
+flask test
+```
+
+Run unittest using test_names:
+
+```
+flask test tests.test_basics   
+```
+
+Obtaining code coverage reports:
+
+```
+flask test --coverage
+```
+
+## Screenshots
+<details><summary>Open</summary>
 Index page:
 
 ![index page](assets/2.png)
