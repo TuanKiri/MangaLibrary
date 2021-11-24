@@ -5,8 +5,10 @@ from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
 from flask_mail import Mail
 from flask_uploads import UploadSet, IMAGES, configure_uploads
-from config import config
+from config import config, Config
 from flask_limiter import Limiter
+from .celery import make_celery
+from celery import Celery
 
 db = SQLAlchemy()
 moment = Moment()
@@ -14,16 +16,16 @@ bootstrap = Bootstrap()
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 login_manager.login_message = "Пожалуйста, войдите на сайт, чтобы получить доступ к этой странице."
-login_manager.login_message_category = "info"
+login_manager.login_message_category = 'info'
 mail = Mail()
 limiter = Limiter()
+celery = Celery(__name__, broker=Config.CELERY_BROKER_URL)
 
 users_upload = UploadSet('users', IMAGES)
 manga_upload = UploadSet('manga', IMAGES)
 news_upload = UploadSet('news', IMAGES)
 
-
-def create_app(config_name):
+def create_app(config_name, **kwargs):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
@@ -47,5 +49,8 @@ def create_app(config_name):
 
     for blueprint in [auth, comment, errors, main, manga, news, user]:
         app.register_blueprint(blueprint)
+
+    if kwargs.get('celery'):
+        make_celery(kwargs.get('celery'), app)
 
     return app

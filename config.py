@@ -31,6 +31,9 @@ class Config:
     RECAPTCHA_PUBLIC_KEY = 'public key'
     RECAPTCHA_PRIVATE_KEY = 'secret key'
 
+    CELERY_BROKER_URL='pyamqp://guest@localhost//'
+    CELERY_BACKEND_URL='db+sqlite:///' + os.path.join(basedir, 'task.sqlite')
+
     @staticmethod
     def init_app(app):
         pass

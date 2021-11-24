@@ -2,7 +2,7 @@ import os
 import click
 import sys
 from flask_migrate import Migrate
-from app import create_app, db
+from app import create_app, db, celery
 from app.models import Role, follows, logs, User, Manga, Chapter, manga_tag, Tag, Comment, News, Permission
 
 COV = None
@@ -11,7 +11,7 @@ if os.environ.get('FLASK_COVERAGE'):
     COV = coverage.coverage(branch=True, include='app/*')
     COV.start()
 
-app = create_app(os.getenv('FLASK_CONFIG') or 'development')
+app = create_app(os.getenv('FLASK_CONFIG') or 'development', celery=celery)
 migrate = Migrate(app, db)
 
 
