@@ -8,6 +8,7 @@ from flask_login import login_user, logout_user, login_required, \
 from .forms import LoginForm, RegistrationForm, ChangeEmailForm, \
                     ChangePasswordForm, PasswordResetRequestForm, \
                     PasswordResetForm
+from ..task import send_confirmation_token, send_change_email, send_password_reset
 
 @auth.before_app_request
 def before_request():
@@ -54,9 +55,7 @@ def register():
                 username=registration_form.username.data)
         db.session.add(user)
         db.session.commit()
-        token = user.generate_confirmation_token()
-        # send_email(user.email, 'Подтверждение аккаунта',
-        #             'email/confirm', user=user, token=token)
+        send_confirmation_token.delay(user.id)
         flash('Письмо с подтверждением было отправлено вам по электронной почте.', 'info')
         return redirect(url_for('auth.login'))
     return render_template('register.html', registration_form=registration_form, title="Регистрация")
@@ -65,9 +64,7 @@ def register():
 @auth.route('/confirm')
 @login_required
 def resend_confirmation():
-    token = current_user.generate_confirmation_token()
-    send_email(current_user.email, 'Подтверждение аккаунта',
-               'email/confirm', user=current_user, token=token)
+    send_confirmation_token.delay(current_user.id)
     flash('Вам было отправлено новое письмо с подтверждением по электронной почте.', 'info')
     return redirect(url_for('main.index'))
 
@@ -92,10 +89,7 @@ def change_email_request():
     if change_email_form.validate_on_submit():
         if current_user.verify_password(change_email_form.password.data):
             new_email = change_email_form.email.data.lower()
-            token = current_user.generate_email_change_token(new_email)
-            send_email(new_email, 'Подтверждение почты',
-                        'email/change_email',
-                        user=current_user, token=token)
+            send_change_email.delay(current_user.id, new_email)
             flash('Вам было отправлено письмо с инструкциями для подтверждению вашего нового адреса электронной почты.', 'info')
             return redirect(url_for('main.index'))
         else:
@@ -138,10 +132,7 @@ def password_reset_request():
     if password_reset_request_form.validate_on_submit():
         user = User.query.filter_by(email=password_reset_request_form.email.data.lower()).first()
         if user:
-            token = user.generate_reset_token()
-            send_email(user.email, 'Сброс пароля',
-                        'email/reset_password',
-                        user=user, token=token)
+            send_password_reset.delay(user.id)
         flash('Письмо с инструкциями по сбросу пароля было отправлено вам на почту.', 'info')
         return redirect(url_for('auth.login'))
     return render_template('password_reset_request.html', password_reset_request_form=password_reset_request_form, title="Обновление пароля")

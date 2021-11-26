@@ -33,6 +33,11 @@ class Config:
 
     CELERY_BROKER_URL='pyamqp://guest@localhost//'
     CELERY_BACKEND_URL='db+sqlite:///' + os.path.join(basedir, 'task.sqlite')
+    CELERY_ROUTES = {
+        'task.email.*': {'queue': 'email'}
+    }
+
+    SERVER_NAME='127.0.0.1:5000'
 
     @staticmethod
     def init_app(app):
