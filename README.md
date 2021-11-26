@@ -1,6 +1,6 @@
 # MangaLibrary
 
-Simple manga reader application written on flask with SQLite database.
+Simple manga (Japanese Comic) reader application written on flask with SQLite database.
 
 ## Features
 
@@ -10,50 +10,68 @@ Simple manga reader application written on flask with SQLite database.
 - user rating
 - administrator moderate comments
 
-## Installation for Windows ![Windows](assets/5.png)
+## Installation
 
-```cmd
+```bash
 git clone https://github.com/JC5LZiy3HVfV5ux/MangaLibrary.git
-
 cd MangaLibrary
-
-python -m venv env
-
-.\env\Scripts\activate
-
+python3 -m venv env
+source env/bin/activate
 pip install -r requirements.txt
 ```
 
 ⚠️ [Bugs in flask_uploads package](https://stackoverflow.com/questions/61628503/flask-uploads-importerror-cannot-import-name-secure-filename)
 
-```
+```bash
 python db_create.py
 ```
 
 Download Bootstrap 5 and add in app/static/js/bootstrap/, app/static/css/bootstrap/.
 
-```cmd
-$env:FLASK_APP = 'run.py'
-
+```bash
+export FLASK_APP=run.py
 flask run
 ```
+
+## Celery & RabbitMQ
+
+Tasks:
+  * task.email.change_email
+  * task.email.confirm
+  * task.email.password_reset
+
+Run worker for queue email 
+```bash
+celery -A worker.celery worker --loglevel=INFO -Q email
+```
+
+Run Flower for worker
+```bash
+celery -A worker.celery flower
+```
+
+Run RabbitMQ server
+```bash
+sudo rabbitmq-server start -detached
+```
+
 ## Testing
 
 Run unittest:
 
-```
+```bash
 flask test
 ```
 
 Run unittest using test_names:
 
-```
+```bash
 flask test tests.test_basics   
 ```
 
 Obtaining code coverage reports:
 
-```
+```bash
 flask test --coverage
 ```
 
