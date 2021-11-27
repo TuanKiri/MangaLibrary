@@ -18,18 +18,22 @@ cd MangaLibrary
 python3 -m venv env
 source env/bin/activate
 pip install -r requirements.txt
-```
-
-⚠️ [Bugs in flask_uploads package](https://stackoverflow.com/questions/61628503/flask-uploads-importerror-cannot-import-name-secure-filename)
-
-```bash
-python db_create.py
-```
-
-Download Bootstrap 5 and add in app/static/js/bootstrap/, app/static/css/bootstrap/.
-
-```bash
 export FLASK_APP=run.py
+```
+
+## Create databases
+
+```bash
+python3 db_create.py
+```
+
+## Bootstrap
+
+Download Bootstrap 5 and add folders in app/static/js/bootstrap/, app/static/css/bootstrap/
+
+## Run application 
+
+```bash
 flask run
 ```
 
