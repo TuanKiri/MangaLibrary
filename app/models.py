@@ -142,15 +142,13 @@ class User(UserMixin, db.Model):
 
     def avatar_url(self, _external=False):
         if self.avatar:
-            return url_for('_uploads.uploaded_file', setname=users_upload.name, filename=self.avatar,
-                               _external=_external)
+            return users_upload.url(self.avatar)
         else:
             return url_for('static', filename='img/avatar.jpg', _external=_external)
 
     def background_url(self, _external=False):
         if self.background:
-            return url_for('_uploads.uploaded_file', setname=users_upload.name, filename=self.background,
-                               _external=_external)
+            return users_upload.url(self.background)
         else:
             return url_for('static', filename='img/background.png', _external=_external)
 
@@ -313,8 +311,7 @@ class Manga(db.Model):
 
     def image_url(self, _external=False):
         if self.image:
-            return url_for('_uploads.uploaded_file', setname=manga_upload.name, filename=self.image,
-                                _external=_external)
+            return manga_upload.url(self.image)
         else:
             return url_for('static', filename='img/manga.jpg', _external=_external)
 
@@ -337,8 +334,7 @@ class Chapter(db.Model):
         if self.image:
             url = []
             for m in self.image.all():
-                url.append(url_for('_uploads.uploaded_file', setname=manga_upload.name, filename=m.image,
-                            _external=_external))
+                url.append(manga_upload.url(m.image))
             return url
 
     def __repr__(self):
@@ -392,8 +388,7 @@ class News(db.Model):
         if self.image:
             url = []
             for m in self.image.all():
-                url.append(url_for('_uploads.uploaded_file', setname=news_upload.name, filename=m.image,
-                            _external=_external))
+                url.append(news_upload.url(m.image))
             return url
 
     def __repr__(self):
@@ -408,8 +403,7 @@ class Images(db.Model):
 
     def image_url(self, _external=False):
         if self.image:
-            return url_for('_uploads.uploaded_file', setname=manga_upload.name, filename=self.image,
-                               _external=_external)
+            return manga_upload.url(self.image)
 
 class AnonymousUser(AnonymousUserMixin):
     def can(self, permissions):

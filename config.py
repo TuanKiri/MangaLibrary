@@ -39,6 +39,8 @@ class Config:
 
     SERVER_NAME='127.0.0.1:5000'
 
+    UPLOADS_AUTOSERVE=True
+
     @staticmethod
     def init_app(app):
         pass
