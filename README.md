@@ -2,6 +2,25 @@
 
 Simple manga (Japanese Comic) reader application written on flask with SQLite database.
 
+<details><summary>Screenshots</summary>
+Index page:
+
+![index page](assets/2.png)
+
+User profile:
+
+![user profile](assets/1.png)
+
+Manga page:
+
+![manga page](assets/3.png)
+
+Chapter page:
+
+![chapter page](assets/4.png)
+
+</details>
+
 ## Features
 
 - user profile, manga commenting, subscription on user / manga
@@ -9,6 +28,16 @@ Simple manga (Japanese Comic) reader application written on flask with SQLite da
 - post news
 - user rating
 - administrator moderate comments
+- send email using queue
+
+## Dockerfile
+
+```bash
+sudo docker build --tag mangalibrary:latest .
+sudo docker run --name mangalibrary --detach --publish 5000:5000 mangalibrary:latest
+```
+
+Go to the website: http://127.0.0.1:5000
 
 ## Installation
 
@@ -40,9 +69,9 @@ flask run
 ## Celery & RabbitMQ
 
 Tasks:
-  * task.email.change_email
-  * task.email.confirm
-  * task.email.password_reset
+  - task.email.change_email
+  - task.email.confirm
+  - task.email.password_reset
 
 Run worker for queue email 
 ```bash
@@ -78,23 +107,3 @@ Obtaining code coverage reports:
 ```bash
 flask test --coverage
 ```
-
-## Screenshots
-<details><summary>Open</summary>
-Index page:
-
-![index page](assets/2.png)
-
-User profile:
-
-![user profile](assets/1.png)
-
-Manga page:
-
-![manga page](assets/3.png)
-
-Chapter page:
-
-![chapter page](assets/4.png)
-
-</details>
