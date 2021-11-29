@@ -1,0 +1,33 @@
+version: '3'
+
+networks:
+  bridge:
+    driver: bridge
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - bridge
+
+  mangalibrary:
+    container_name: 'mangalibrary'
+    environment:
+      - FLASK_APP=run.py
+    build: .
+    ports:
+      - "5000:5000"
+    command: bash -c "python3 db_create.py && flask run --host 0.0.0.0"
+    networks:
+      - bridge
+
+  celery:
+    container_name: 'celery'
+    build: .
+    command: celery -A worker.celery worker --loglevel=INFO -Q email
+    networks:
+      - bridge

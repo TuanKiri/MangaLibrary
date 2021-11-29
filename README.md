@@ -30,13 +30,6 @@ Chapter page:
 - administrator moderate comments
 - send email using queue
 
-## Dockerfile
-
-```bash
-sudo docker build --tag mangalibrary:latest .
-sudo docker run --name mangalibrary --detach --publish 5000:5000 mangalibrary:latest
-```
-
 Go to the website: http://127.0.0.1:5000
 
 ## Installation

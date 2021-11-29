@@ -1,19 +1,12 @@
 # syntax=docker/dockerfile:1
-FROM ubuntu:20.04
+FROM python:3.9
 
-WORKDIR /home/mangalibrary
-
-RUN apt-get update && apt-get install -y python3 python3-pip
+WORKDIR /mangalibrary 
 
 COPY requirements.txt requirements.txt
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
-
-ENV FLASK_APP run.py
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app app
-COPY run.py config.py db_create.py ./
-RUN python3 db_create.py
+COPY run.py config.py db_create.py worker.py ./
 
 EXPOSE 5000
-CMD ["flask", "run", "--host", "0.0.0.0"]
