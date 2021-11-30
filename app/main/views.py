@@ -26,23 +26,22 @@ def index():
                                 .group_by(Tag) \
                                 .order_by(db.text('popular DESC')) \
                                 .limit(15)
-    # new_chapter = db.session.query(Manga, Chapter, db.func.max(Chapter.timestamp).label('timestamp')) \
-    #                             .join(Chapter) \
-    #                             .group_by(Manga) \
-    #                             .order_by(db.text('timestamp DESC')) \
-    #                             .limit(10)
-    new_chapter = []
+    new_chapter = db.session.query(Manga, Chapter, db.func.max(Chapter.timestamp).label('timestamp')) \
+                                .join(Chapter) \
+                                .group_by(Manga.id, Chapter.id) \
+                                .order_by(db.text('timestamp DESC')).limit(10)
+
     news = News.query.order_by(News.timestamp.desc()).limit(5)
 
     manga_discussion = db.session.query(Manga.id, Manga.title, db.literal('manga').label('type'), db.func.count().label('popular')) \
                                 .join(Comment) \
-                                .group_by(Comment.manga_id).filter(Comment.timestamp >= datetime.now() - timedelta(days=1))
+                                .group_by(Manga.id).filter(Comment.timestamp >= datetime.now() - timedelta(days=1))
     news_discussion = db.session.query(News.id, News.title, db.literal('news').label('type'), db.func.count().label('popular')) \
                                 .join(Comment) \
-                                .group_by(Comment.news_id).filter(Comment.timestamp >= datetime.now() - timedelta(days=1))
+                                .group_by(News.id).filter(Comment.timestamp >= datetime.now() - timedelta(days=1))
 
-    # popular_discussion = news_discussion.union(manga_discussion).order_by(db.text('popular DESC')).limit(5)
-    popular_discussion = []
+    popular_discussion = news_discussion.union(manga_discussion).order_by(db.text('popular DESC')).limit(10)
+    
     page = request.args.get('page', 1, type=int)
     pagination = manga.paginate(
     page, per_page=current_app.config['MANGA_LIST_PER_PAGE'],
