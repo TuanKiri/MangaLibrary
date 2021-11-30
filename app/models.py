@@ -350,7 +350,7 @@ manga_tag = db.Table('manga_tags',
 class Tag(db.Model):
     __tablename__ = 'tags'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
+    name = db.Column(db.String(32))
     manga = db.relationship('Manga',
                             secondary=manga_tag,
                             backref=db.backref('tags', lazy='dynamic'),
