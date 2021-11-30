@@ -322,8 +322,8 @@ class Manga(db.Model):
 class Chapter(db.Model):
     __tablename__ = 'chapter'
     id = db.Column(db.Integer, primary_key=True)
-    volume = db.Column(db.String(32))
-    chapter = db.Column(db.String(32))
+    volume = db.Column(db.Integer)
+    chapter = db.Column(db.Integer)
     title = db.Column(db.String(128))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     manga_id = db.Column(db.Integer, db.ForeignKey('manga.id'))
