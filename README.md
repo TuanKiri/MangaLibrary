@@ -1,6 +1,6 @@
 # MangaLibrary
 
-Simple manga (Japanese Comic) reader application written on flask with Postgres database.
+Simple manga (Japanese Comics) reader application written on Flask with Postgres database.
 
 <details><summary>Screenshots</summary>
 Index page:
@@ -23,11 +23,10 @@ Chapter page:
 
 ## Features
 
-- user profile, comment, user / manga subscriptions
-- add manga, add chapter, update manga, tags
-- post news
-- user rating
-- administrator moderate comments
+- user profile, user subscriptions, user statistics, user rating
+- manga, chapter, manga subscriptions , tags, comments
+- post news, popular discussions
+- administrator moderate users and comments
 - send email using queue
 
 ## Technologies
@@ -37,9 +36,9 @@ Chapter page:
 3. Message-broker: RabbitMQ
 4. Task queue: Celery
 
-Go to the website: http://127.0.0.1:5000
-
 ## Environment
+
+These environment variables are needed to run the site
 
 ```bash
 MAIL_USERNAME=
@@ -60,6 +59,13 @@ SQLALCHEMY_DATABASE_URI=
 ```bash
 git clone https://github.com/JC5LZiy3HVfV5ux/MangaLibrary.git
 cd MangaLibrary
+```
+
+Set environments
+
+Set Bootstrap 5
+
+```bash
 sudo docker-compose up
 ```
 
@@ -73,7 +79,11 @@ source env/bin/activate
 pip install -r requirements.txt
 ```
 
+Set environments
+
 ## Create databases
+
+If SQLALCHEMY_DATABASE_URI is empty, then it will be created SQLite database
 
 ```bash
 python3 db_create.py
@@ -97,16 +107,19 @@ Tasks:
   - task.email.password_reset
 
 Run worker for queue email 
+
 ```bash
 celery -A worker.celery worker --loglevel=INFO -Q email
 ```
 
 Run Flower for worker
+
 ```bash
 celery -A worker.celery flower
 ```
 
 Run RabbitMQ server
+
 ```bash
 sudo rabbitmq-server start -detached
 ```
