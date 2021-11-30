@@ -7,6 +7,7 @@ COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app app
-COPY run.py config.py db_create.py worker.py ./
+COPY run.py config.py db_create.py worker.py boot.sh ./
+RUN chmod +x boot.sh 
 
 EXPOSE 5000
