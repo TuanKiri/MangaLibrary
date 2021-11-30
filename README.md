@@ -1,6 +1,6 @@
 # MangaLibrary
 
-Simple manga (Japanese Comic) reader application written on flask with SQLite database.
+Simple manga (Japanese Comic) reader application written on flask with Postgres database.
 
 <details><summary>Screenshots</summary>
 Index page:
@@ -23,14 +23,45 @@ Chapter page:
 
 ## Features
 
-- user profile, manga commenting, subscription on user / manga
+- user profile, comment, user / manga subscriptions
 - add manga, add chapter, update manga, tags
 - post news
 - user rating
 - administrator moderate comments
 - send email using queue
 
+## Technologies
+
+1. Server: Python Flask
+2. Database: Postgres
+3. Message-broker: RabbitMQ
+4. Task queue: Celery
+
 Go to the website: http://127.0.0.1:5000
+
+## Environment
+
+```bash
+MAIL_USERNAME=
+MAIL_PASSWORD=
+MANGA_MAIL_SENDER=
+RECAPTCHA_PUBLIC_KEY=
+RECAPTCHA_PRIVATE_KEY=
+FLASK_APP=
+FLASK_CONFIG=
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_DB=
+SQLALCHEMY_DATABASE_URI=
+```
+
+## Docker
+
+```bash
+git clone https://github.com/JC5LZiy3HVfV5ux/MangaLibrary.git
+cd MangaLibrary
+sudo docker-compose up
+```
 
 ## Installation
 
@@ -40,7 +71,6 @@ cd MangaLibrary
 python3 -m venv env
 source env/bin/activate
 pip install -r requirements.txt
-export FLASK_APP=run.py
 ```
 
 ## Create databases
