@@ -265,7 +265,7 @@ class User(UserMixin, db.Model):
 class Manga(db.Model):
     __tablename__ = 'manga'
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(128))
+    title = db.Column(db.String(128), unique=True, index=True)
     author = db.Column(db.String(128))
     image = db.Column(db.String(128))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)

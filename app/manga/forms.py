@@ -15,7 +15,7 @@ class EditMangaForm(FlaskForm):
     catalog = TextAreaField('Описание')
     submit = SubmitField()
 
-    def validate_username(self, field):
+    def validate_title(self, field):
         if Manga.query.filter_by(title=field.data).first():
             raise ValidationError('Манга существует.')
 
