@@ -47,7 +47,7 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = os.environ.get('DEBUG', True)
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URI') or \
         'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
     UPLOADS_DEFAULT_DEST = os.environ.get('UPLOADS_DEFAULT_DEST') or \
         os.path.join(basedir, 'upload-dev/')
@@ -55,7 +55,7 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING = os.environ.get('TESTING', True)
-    SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
+    SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URI') or \
         'sqlite://'
     UPLOADS_DEFAULT_DEST = os.path.join(basedir, 'upload-test/')
 
