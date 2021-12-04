@@ -108,7 +108,7 @@ def change_email(token):
     return redirect(url_for('main.index'))
 
 
-@auth.route('/change-password', methods=['GET', 'POST'])
+@auth.route('/change_password', methods=['GET', 'POST'])
 @login_required
 def change_password():
     change_password_form = ChangePasswordForm()
