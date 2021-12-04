@@ -1,7 +1,7 @@
 import time
 import unittest
 from datetime import datetime
-from app import create_app, db
+from app import create_app, db, users_upload, manga_upload
 from app.models import User, Role, Permission, AnonymousUser, follows, Manga, logs
 
 
@@ -220,20 +220,36 @@ class UserModelTestCase(unittest.TestCase):
         u = User(email='artem@mail.ru', password='123', role=r)
         self.assertTrue(u.is_administrator)
 
-    def test_is_banned_role(self):
+    def test_is_banned(self):
         r = Role.query.filter_by(name='Banned').first()
         u = User(email='artem@mail.ru', password='123', role=r)
         self.assertTrue(u.banned)
 
     def test_avatar_url(self):
         u = User(email='artem@mail.ru')
+        db.session.add(u)
+        db.session.commit()
         with self.app.test_request_context('/'):
             self.assertTrue(u.avatar_url() == '/static/img/avatar.jpg')
-        
+        path = f'/{u.id}/avatar/{u.id}.png'
+        u.avatar = path
+        db.session.add(u)
+        db.session.commit()
+        with self.app.test_request_context('/'):
+            self.assertTrue(u.avatar_url() == users_upload.url(path))
+
     def test_background_url(self):
         u = User(email='artem@mail.ru')
+        db.session.add(u)
+        db.session.commit()
         with self.app.test_request_context('/'):
             self.assertTrue(u.background_url() == '/static/img/background.png')
+        path = f'/{u.id}/background/{u.id}.png'
+        u.background = path
+        db.session.add(u)
+        db.session.commit()
+        with self.app.test_request_context('/'):
+            self.assertTrue(u.background_url() == users_upload.url(path))
 
     def test_user_read(self):
         u = User(email='artem@mail.ru')
@@ -257,3 +273,41 @@ class UserModelTestCase(unittest.TestCase):
         db.session.commit()
         self.assertTrue(db.session.query(logs).count() == 0)
 
+    def test_default_admin(self):
+        self.app.config['MANGA_ADMIN'] = "admin@mail.ru"
+        u = User(email='admin@mail.ru')
+        self.assertTrue(u.can(Permission.ADMIN))
+
+
+class MangaModelTestCase(unittest.TestCase):
+    def setUp(self):
+        self.app = create_app('testing')
+        self.app_context = self.app.app_context()
+        self.app_context.push()
+        db.create_all()
+        Role.insert_roles()
+
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
+        self.app_context.pop()
+
+    def test_manga_tags(self):
+        tags = "Драма,Научная фантастика,Психология,Сёнэн,Юри"
+        m = Manga(tags_string=tags)
+        db.session.add(m)
+        db.session.commit()
+        self.assertTrue(m.tags_string == tags)
+
+    def test_manga_image_url(self):
+        m = Manga()
+        db.session.add(m)
+        db.session.commit()
+        with self.app.test_request_context('/'):
+            self.assertTrue(m.image_url() == '/static/img/manga.jpg')
+        path = f'/{m.id}/background/{m.id}.png'
+        m.image = path
+        db.session.add(m)
+        db.session.commit()
+        with self.app.test_request_context('/'):
+            self.assertTrue(m.image_url() == manga_upload.url(path))
