@@ -1,3 +1,4 @@
+from functools import cache
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, MultipleFileField
 from wtforms.validators import Length, DataRequired, Regexp
@@ -6,7 +7,8 @@ from .. import manga_upload
 from ..models import Manga
 from wtforms import ValidationError
 
-class EditMangaForm(FlaskForm):
+
+class AddMangaForm(FlaskForm):
     image = FileField('', validators=[FileAllowed(manga_upload, message='Только изображения')])
     title = StringField('Название',
                         validators=[DataRequired(message="Поле пусто!"), Length(1, 128, message='От 1 до 128 символов длиной')])
@@ -18,6 +20,18 @@ class EditMangaForm(FlaskForm):
     def validate_title(self, field):
         if Manga.query.filter_by(title=field.data).first():
             raise ValidationError('Манга существует.')
+
+
+class EditMangaForm(AddMangaForm):
+    def __init__(self, manga, *args, **kwargs):
+        super(EditMangaForm, self).__init__(*args, **kwargs)
+        self.manga = manga
+
+    def validate_title(self, field):
+        if field.data != self.manga.title and \
+                Manga.query.filter_by(title=field.data).first():
+            raise ValidationError('Манга существует.')
+
 
 class EditChapterForm(FlaskForm):
     volume = StringField('Том', validators=[Length(1, 32, message='От 1 до 32 символов длиной'), 

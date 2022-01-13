@@ -1,6 +1,6 @@
 from ..comment.forms import CommentForm
 from datetime import datetime
-from .forms import EditMangaForm, EditChapterForm
+from .forms import AddMangaForm, EditMangaForm, EditChapterForm
 from . import manga
 from flask import render_template, redirect, url_for, flash, request,\
     current_app
@@ -23,23 +23,23 @@ def index(id):
 @login_required
 @permission_required(Permission.PUBLICATION)
 def add():
-    edit_manga_form = EditMangaForm()
-    if edit_manga_form.validate_on_submit():
+    add_manga_form = AddMangaForm()
+    if add_manga_form.validate_on_submit():
         manga = Manga(
-            title=edit_manga_form.title.data,
-            author=edit_manga_form.author.data,
-            tags_string=edit_manga_form.tags.data,
-            catalog=edit_manga_form.catalog.data,
+            title=add_manga_form.title.data,
+            author=add_manga_form.author.data,
+            tags_string=add_manga_form.tags.data,
+            catalog=add_manga_form.catalog.data,
             user=current_user._get_current_object()
         )
-        if edit_manga_form.image.data:
+        if add_manga_form.image.data:
             forder = str(manga.id)
-            manga.image = manga_upload.save(edit_manga_form.image.data, folder=forder)
+            manga.image = manga_upload.save(add_manga_form.image.data, folder=forder)
         db.session.add(manga)
         db.session.commit()
         flash('Манга %s добавлена.'% manga.title, 'success')
         return redirect(url_for('.index', id=manga.id))
-    return render_template("add_manga.html", edit_manga_form=edit_manga_form, title="Добавить мангу")
+    return render_template("add_manga.html", edit_manga_form=add_manga_form, title="Добавить мангу")
 
 
 @manga.route('/edit/<int:id>', methods=['GET', 'POST'])
@@ -47,7 +47,7 @@ def add():
 @permission_required(Permission.PUBLICATION)
 def edit(id):
     manga = Manga.query.get_or_404(id)
-    edit_manga_form = EditMangaForm()
+    edit_manga_form = EditMangaForm(manga=manga)
     if edit_manga_form.validate_on_submit():
         manga.title=edit_manga_form.title.data
         manga.author=edit_manga_form.author.data
