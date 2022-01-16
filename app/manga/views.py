@@ -1,6 +1,6 @@
 from ..comment.forms import CommentForm
 from datetime import datetime
-from .forms import AddMangaForm, EditMangaForm, EditChapterForm
+from .forms import AddMangaForm, EditMangaForm, AddChapterForm
 from . import manga
 from flask import render_template, redirect, url_for, flash, request,\
     current_app
@@ -102,18 +102,18 @@ def unfollow(id):
 @permission_required(Permission.PUBLICATION)
 def add_chapter(id):
     manga = Manga.query.get_or_404(id)
-    edit_chapter_form = EditChapterForm()
-    if edit_chapter_form.validate_on_submit():
+    add_chapter_form = AddChapterForm()
+    if add_chapter_form.validate_on_submit():
         chapter = Chapter(
-            volume=edit_chapter_form.volume.data,
-            chapter=edit_chapter_form.chapter.data,
-            title=edit_chapter_form.title.data,
+            volume=add_chapter_form.volume.data,
+            chapter=add_chapter_form.chapter.data,
+            title=add_chapter_form.title.data,
             user=current_user._get_current_object(),
             manga=manga
         )
         for file in request.files.getlist("image"):
             if file.filename:
-                forder = str(manga.id) + "/" + str(edit_chapter_form.volume.data) + "/" + str(edit_chapter_form.chapter.data)
+                forder = str(manga.id) + "/" + str(add_chapter_form.volume.data) + "/" + str(add_chapter_form.chapter.data)
                 image = Images(
                     image = manga_upload.save(file, folder=forder),
                     chapter=chapter
@@ -123,7 +123,26 @@ def add_chapter(id):
         db.session.commit()
         flash('Глава опубликована.', 'success')
         return redirect(url_for('.index', id=manga.id))
-    return render_template("add_chapter.html", edit_chapter_form=edit_chapter_form, manga=manga, title=manga.title)
+    return render_template("add_chapter.html", edit_chapter_form=add_chapter_form, manga=manga, title=manga.title)
+
+
+@manga.route('/delete_chapter/<int:id>/<int:volume>/<int:chapter>', methods=['GET', 'POST'])
+@login_required
+@permission_required(Permission.PUBLICATION)
+def delete_chapter(id, volume, chapter):
+    manga = Manga.query.get_or_404(id)
+
+    current_chapter = manga.chapter.filter_by(
+        volume=volume,
+        chapter=chapter
+    ).first_or_404()
+
+    db.session.delete(current_chapter)
+    db.session.commit()
+    flash('Глава удалена.', 'success')
+
+    return redirect(url_for('.index', id=manga.id))
+
 
 @manga.route('<int:id>/<int:volume>/<int:chapter>')
 def chapter(id, volume, chapter):
@@ -151,6 +170,7 @@ def chapter(id, volume, chapter):
 
     return render_template("chapter.html", pagination_chapters=pagination_chapters, current_chapter=current_chapter, chapters=chapters, \
                             pagination_images=pagination_images, manga=manga, title=title)
+
 
 @manga.route('/tag/<int:id>')
 def tag(id):

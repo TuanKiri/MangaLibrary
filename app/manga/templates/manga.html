@@ -23,7 +23,9 @@
                 <a type="button" href="{{ url_for('manga.tag', id = tag.id) }}" class="btn btn-light mb-2">{{ tag.name }}</a>
             {% endfor %}
         {% endif %}
-        <p class="card-text"><small class="text-muted">Автор: {{ manga.author }}</small></p>
+        {% if manga.author %}
+            <p class="card-text"><small class="text-muted">Автор: {{ manga.author }}</small></p>
+        {% endif %}
         <p class="card-text"><small class="text-muted">Обновлено: {{ moment(manga.timestamp).fromNow() }}</small></p>
         {% if manga.user.id %}
             <p class="card-text"><small class="text-muted">Обновил: <a href="{{ url_for('user.index', id = manga.user.id) }}">{{ manga.user.username }}</a></small></p>
@@ -34,12 +36,24 @@
                 <a  type="button" href="{{ url_for('.edit', id = manga.id) }}" class="btn btn-primary mt-2">Редактировать</a>
             </div>
         {% endif %}
+        {% if manga.chapter.count() %}
         <h6>Главы:</h6>
-        <div class="list-group">
+        {% endif %}
             {% for chapter in manga.chapter.all() %}
-                <a href="{{ url_for('manga.chapter', id = manga.id, volume = chapter.volume, chapter = chapter.chapter) }}" type="button" class="list-group-item list-group-item-action">Том {{ chapter.volume }} Глава {{ chapter.chapter }} {{ chapter.title}}</a>
+                <div class="d-flex mb-1">
+                    <a href="{{ url_for('manga.chapter', id = manga.id, volume = chapter.volume, chapter = chapter.chapter) }}" type="button" class="list-group-item list-group-item-action">
+                        Том {{ chapter.volume }} Глава {{ chapter.chapter }} {{ chapter.title}} 
+                    </a>
+                    {% if current_user.is_authenticated and current_user.can(Permission.PUBLICATION) %}
+                    <a href="{{ url_for('manga.delete_chapter', id = manga.id, volume = chapter.volume, chapter = chapter.chapter) }}" type="button" class="btn btn-danger chapter-delete">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
+                            <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
+                        </svg>
+                    </a>
+                    {% endif %}
+                </div>
             {% endfor %}
-        </div>
         {% if current_user.is_authenticated and current_user.can(Permission.PUBLICATION) %}
             <div class="d-flex mt-2 justify-content-center">
                 <a  type="button" href="{{ url_for('manga.add_chapter', id = manga.id) }}" class="btn btn-primary mt-2">Добавить главу</a>

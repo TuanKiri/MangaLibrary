@@ -1,4 +1,3 @@
-from functools import cache
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, MultipleFileField
 from wtforms.validators import Length, DataRequired, Regexp
@@ -33,16 +32,17 @@ class EditMangaForm(AddMangaForm):
             raise ValidationError('Манга существует.')
 
 
-class EditChapterForm(FlaskForm):
+class AddChapterForm(FlaskForm):
     volume = StringField('Том', validators=[Length(1, 32, message='От 1 до 32 символов длиной'), 
                                             Regexp('^[0-9]*$', 0, 'Только цифры!')])
     chapter = StringField('Глава', validators=[Length(1, 32, message='От 1 до 32 символов длиной'),
                                                 Regexp('^[0-9]*$', 0, 'Только цифры!')])
     title = StringField('Название',
                         validators=[Length(0, 128, message='До 128 символов длиной')])
-    image = MultipleFileField('', id="formFileMultiple", validators=[file_required(message='Изображения не загружены!'), 
+    image = MultipleFileField('', id="formFileMultiple", validators=[DataRequired(message='Изображения не загружены!'), 
                                                                     FileAllowed(manga_upload, message='Только изображения!')])
     submit = SubmitField('Добавить')
+        
 
 class SearchForm(FlaskForm):
     search = StringField(validators=[DataRequired()])
