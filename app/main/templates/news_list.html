@@ -1,14 +1,15 @@
 {% extends "base.html" %}
-{% import "_macros.html" as macros %}
+{% import "_news.html" as news %}
+{% import "_pagination.html" as macros %}
 
 {% block page_content %}
 <h5 class="mb-3 mt-4">Все новости</h5>
-<div class="list-group">
-    {% include '_news.html' %}
+<div class="news-grid">
+    {{news.widget(pagination.items)}}
 </div>
 
 {% if pagination and pagination.pages > 1 %}
-{{ macros.pagination_widget(pagination, '.news_list') }}
+{{ macros.widget(pagination, '.news_list') }}
 {% endif %}
 
 {% endblock %}

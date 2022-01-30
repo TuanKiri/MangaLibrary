@@ -1,14 +1,11 @@
-{% for item in pagination.items %}
-    <a href="{{ url_for('news.index', id = item.id) }}" class="list-group-item list-group-item-action border-0">
-        <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">{{ item.title }}</h5>
-            <small class="text-muted">{{ moment(item.timestamp).fromNow() }}</small>
+{% macro widget(news) %}
+    {% for item in news %}
+        <div class="mb-2">
+            <div class="d-flex flex-column justify-content-center mb-3" >
+                <div class="poster news-poster p-0" style="background-image: url({{ item.get_poster() }})">
+                </div>
+                <h6 class="card-title mt-1"><a class="link-dark" href="{{ url_for('news.index', id=item.id) }}">{{ item.title }}</a></h6>
+            </div>
         </div>
-        <small class="text-muted d-flex align-items-center">
-            <svg class="me-1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
-            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-            </svg>
-            {{ item.user.username }}
-        </small>
-    </a>
-{% endfor %}
+    {% endfor %}
+{% endmacro %}

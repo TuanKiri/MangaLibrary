@@ -1,0 +1,5 @@
+{% macro widget(tags) %}
+    {% for tag in tags %}
+        <a type="button" href="{{ url_for('manga.tag', id = tag.id) }}" class="btn btn-light mb-2">{{ tag.name }}</a>
+    {% endfor %}
+{% endmacro %}

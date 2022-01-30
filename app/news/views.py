@@ -36,7 +36,7 @@ def add():
             if file.filename:
                 forder = str(news.id)
                 image = Images(
-                    image = news_upload.save(file, folder=forder),
+                    url = news_upload.save(file, folder=forder),
                     news=news
                 )
                 db.session.add(image)

@@ -16,7 +16,7 @@ def before_request():
 
 
 @auth.route('/login', methods=['GET', 'POST'])
-@limiter.limit('6/hour', methods=['POST'],
+@limiter.limit('36/hour', methods=['POST'],
                error_message="Вы пытаетесь войти в систему слишком много раз, повторите попытку через час.")
 def login():
     login_form = LoginForm()

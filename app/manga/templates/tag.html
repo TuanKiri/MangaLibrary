@@ -1,12 +1,14 @@
 {% extends "base.html" %}
-{% import "_macros.html" as macros %}
+{% import "_manga.html" as manga %}
+{% import "_pagination.html" as macros %}
 
 {% block page_content %}
 <h5 class="mb-3 mt-4">Тег: {{ tag.name }}</h5>
-   
-{% include '_manga.html' %}
+<div class="anime-grid">
+    {{manga.widget(pagination.items, current_user)}}
+</div>
 
 {% if pagination and pagination.pages > 1 %}
-{{ macros.pagination_widget(pagination, '.tag', id=tag.id) }}
+{{ macros.widget(pagination, '.tag', id=tag.id) }}
 {% endif %}
 {% endblock %}

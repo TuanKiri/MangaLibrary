@@ -115,7 +115,7 @@ def add_chapter(id):
             if file.filename:
                 forder = str(manga.id) + "/" + str(add_chapter_form.volume.data) + "/" + str(add_chapter_form.chapter.data)
                 image = Images(
-                    image = manga_upload.save(file, folder=forder),
+                    url = manga_upload.save(file, folder=forder),
                     chapter=chapter
                 )
                 db.session.add(image)

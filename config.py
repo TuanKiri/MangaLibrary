@@ -24,7 +24,7 @@ class Config:
     USER_FOLLOWERS_PER_PAGE = os.environ.get('USER_FOLLOWERS_PER_PAGE', 10)
     USER_COMMENTS_PER_PAGE = os.environ.get('USER_COMMENTS_PER_PAGE', 10)
     USER_LIST_PER_PAGE = os.environ.get('USER_LIST_PER_PAGE', 10)
-    MANGA_LIST_PER_PAGE = os.environ.get('MANGA_LIST_PER_PAGE', 10)
+    MANGA_LIST_PER_PAGE = os.environ.get('MANGA_LIST_PER_PAGE', 30)
     MANGA_COMMENTS_PER_PAGE = os.environ.get('MANGA_COMMENTS_PER_PAGE', 10)
     NEWS_LIST_PER_PAGE = os.environ.get('NEWS_LIST_PER_PAGE', 10)
     TAGS_LIST_PER_PAGE = os.environ.get('TAGS_LIST_PER_PAGE', 100)

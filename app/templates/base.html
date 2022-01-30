@@ -27,9 +27,8 @@
           <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
                 <a class="btn btn-primary" href="{{ url_for('main.manga_list') }}">Манга</a>
-                <a class="btn btn-primary" href="{{ url_for('main.tags_list') }}">Теги</a>
-                <a class="btn btn-primary" href="{{ url_for('main.users_list') }}">Пользователи</a>
                 <a class="btn btn-primary" href="{{ url_for('main.news_list') }}">Новости</a>
+                <a class="btn btn-primary" href="{{ url_for('main.users_list') }}">Пользователи</a>
             </div>
             <div class="navbar-nav ms-auto">
                 {% if current_user.is_authenticated %}
@@ -69,7 +68,7 @@
 
 {% block content %}
 
-<main class="container-md my-4 min-vh-100">
+<main class="container my-4 min-vh-100">
     <div class="container px-0">
         {% set message = get_flashed_messages(with_categories=True)%}
         {% for type, message in message %}
@@ -103,4 +102,12 @@
 {{ moment.include_moment() }}
 {{ moment.lang('ru') }}
 <script src="{{ url_for('static',filename='js/bootstrap/js/bootstrap.js') }}"></script>
+<script src="{{ url_for('static',filename='js/bootstrap/js/bootstrap.bundle.js') }}"></script>
+<script src="{{ url_for('static',filename='js/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
 {% endblock %}

@@ -284,6 +284,7 @@ class Manga(db.Model):
 
     @tags_string.setter
     def tags_string(self, value):
+        print(value)
         self.tags = []
         tags_list = [tag.strip() for tag in value.split(',') if len(tag.strip()) > 0]
         if len(tags_list) > 0:
@@ -316,11 +317,11 @@ class Chapter(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     image = db.relationship('Images', backref='chapter', lazy='dynamic')
 
-    def image_url(self, _external=False):
+    def image_url(self):
         if self.image:
             url = []
             for m in self.image.all():
-                url.append(manga_upload.url(m.image))
+                url.append(manga_upload.url(m.url))
             return url
 
     def __repr__(self):
@@ -370,11 +371,17 @@ class News(db.Model):
     comments = db.relationship('Comment', backref='news', lazy='dynamic')
     image = db.relationship('Images', backref='news', lazy='dynamic')
 
-    def image_url(self, _external=False):
+    def get_poster(self, _external=True):
+        if self.image:
+            return news_upload.url(self.image.first().url)
+        else:
+            return url_for('static', filename='img/news.png', _external=_external)
+    
+    def image_url(self):
         if self.image:
             url = []
             for m in self.image.all():
-                url.append(news_upload.url(m.image))
+                url.append(news_upload.url(m.url))
             return url
 
     def __repr__(self):
@@ -383,13 +390,13 @@ class News(db.Model):
 class Images(db.Model):
     __tablename__ = 'images'
     id = db.Column(db.Integer, primary_key=True)
-    image = db.Column(db.String(128))
+    url = db.Column(db.String(128))
     news_id = db.Column(db.Integer, db.ForeignKey('news.id'))
     chapter_id = db.Column(db.Integer, db.ForeignKey('chapters.id'))
 
-    def image_url(self, _external=False):
-        if self.image:
-            return manga_upload.url(self.image)
+    def image_url(self):
+        if self.url:
+            return manga_upload.url(self.url)
 
 class AnonymousUser(AnonymousUserMixin):
     def can(self, permissions):

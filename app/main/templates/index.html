@@ -1,129 +1,41 @@
 {% extends "base.html" %}
-{% import "_macros.html" as macros %}
+{% import "_pagination.html" as pagination %}
+{% import "_manga.html" as manga %}
+{% import "_news.html" as news %}
+{% import "_tags.html" as tags %} 
+{% import "_top_users.html" as top_users %}
+{% import "_chapters.html" as chapters%}
 
 {% block page_content %}
 <form class="d-flex" method="get" action="{{ url_for('main.manga_list') }}">
     {{ search_form.search(placeholder="Поиск манги",class_="form-control me-2") }}
     {{ search_form.submit(class_="btn btn-primary") }}
 </form>
-<h6 class="mb-3 mt-4">Популярная манга</h6>
-<div class="text-center row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
-  {% for p in popular_manga %}
-    <div class="col">
-      <div class="card h-100">
-        <img src="{{ p.Manga.image_url() }}" alt="...">
-        <div class="card-body d-flex align-items-center justify-content-center">
-            <h6 class="card-title mb-0"><a class="link-dark" href="{{ url_for('manga.index', id=p.Manga.id) }}">{{ p.Manga.title }}</a></h6>
-        </div>
-        <div class="card-footer">
-          <small class="text-muted">Обновлено: {{ moment(p.Manga.timestamp).fromNow() }}</small>
-        </div>
-      </div>
+<div class="row mt-4" >
+  <div class="col-9">
+    <h6 class="mb-3">Популярная манга</h6>
+    <div class="anime-grid">
+      {{manga.widget(popular_manga, current_user)}}
     </div>
-    {% endfor %}
+    <h6 class="mb-3 mt-4">Последние новости</h6>
+    <div class="news-grid">
+      {{news.widget(last_news)}}
+    </div>
+    <h6 class="mb-3 mt-4">Новая манга</h6>
+    <div class="anime-grid">
+      {{manga.widget(pagination_new_manga.items, current_user)}}
+    </div>
+    {% if pagination_new_manga and pagination_new_manga.pages > 1 %}
+      {{ pagination.widget(pagination_new_manga, '.index') }}
+    {% endif %}
   </div>
-  <div class="container p-0">
-    <div class="row">
-        <div class="col">
-            <h6 class="mb-3 mt-4">Последние новости</h6>
-            <div class="list-group">
-              {% for item in news %}
-              <a href="{{ url_for('news.index', id = item.id) }}" class="list-group-item list-group-item-action">
-                  <div class="d-flex w-100 justify-content-between">
-                      <h6>{{ item.title }}</h6>
-                      <small class="text-muted">{{ moment(item.timestamp).fromNow() }}</small>
-                  </div>
-                  <small class="text-muted d-flex align-items-center">
-                      <svg class="me-1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
-                      <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                      </svg>
-                      {{ item.user.username }}
-                  </small>
-              </a>
-              {% endfor %}
-            </div>
-            <a type="button" href="{{ url_for('.news_list') }}" class="btn btn-light mt-3">
-              Все новости
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
-              </svg>
-            </a>
-        </div>
-        <div class="col">
-            <h6 class="mb-3 mt-4">Топ активных пользователей</h6>
-            <ol class="list-group list-group-numbered circle">
-              {% for user in popular_users %}
-                  <li class="list-group-item d-flex justify-content-between align-items-start">
-                      <span class="avatar avatar-small ms-2" style="background-image:  url({{ user.User.avatar_url() }})">
-                      </span>
-                      <div class="ms-2 me-auto">
-                          <div class="fw-bold"> 
-                            <h6 class="mb-1">
-                              <a class="link-dark" href="{{ url_for('user.index', id = user.User.id) }}">
-                                {{ user.User.username }}
-                              </a>
-                            </h6>
-                          </div>
-                          онлайн {{ moment(user.User.last_seen).fromNow() }}
-                      </div>
-                      <span class="badge bg-primary rounded-pill">{{ user.popular }}</span>
-                  </li>
-                {% endfor %}
-              </ol>
-              <a type="button" href="{{ url_for('.users_list') }}" class="btn btn-light mt-3">
-                Все пользователи
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
-                </svg>
-              </a>
-        </div>
-      </div>    
-    <div class="row mt-4" >
-      <div class="col-sm-9">
-        <h6 class="mb-3">Новая манга</h6>
-        {% include '_manga.html' %}
-      </div>
-      <div class="col-3">
-        <h6 class="mb-3">Часто используемые теги</h6>
-        {% for p in popular_tags %}
-            <a type="button" href="{{ url_for('manga.tag', id = p.Tag.id) }}" class="btn btn-light mb-2">{{ p.Tag.name }}</a>
-        {% endfor %}
-        <h6 class="mb-3 mt-4">Новые главы</h6>
-        {% for c in new_chapter %}
-        <div class="mb-3 d-flex" >
-          <div>
-            <img src="{{ c.Manga.image_url() }}" style="width: 65px" alt="...">
-          </div>
-          <div class="ms-2">
-            <h6 class="card-title"><a class="link-dark" href="{{ url_for('manga.index', id=c.Manga.id) }}">{{ c.Manga.title }}</a></h6>
-            <p class="mb-0">Том {{c.Chapter.volume}} Глава {{c.Chapter.chapter}}</p>
-            <small class="text-muted">Читают: {{ c.Manga.users.count() }}</small>
-          </div>
-        </div>
-        {% endfor %}
-        <h6 class="mb-3 mt-4">Обсуждения дня</h6>
-        {% for discussion in popular_discussion %}
-        <p class="card-title mb-0">
-          {% if discussion.type == 'manga' %}
-            <a class="link-dark" href="{{ url_for('manga.index', id=discussion.id) }}">{{ discussion.title }}</a>
-            <small><span class="badge bg-primary">манга</span></small>
-          {% endif %}
-          {% if discussion.type == 'news' %}
-            <a class="link-dark" href="{{ url_for('news.index', id=discussion.id) }}">{{ discussion.title }}</a>
-            <small><span class="badge bg-info">новости</span></small>
-          {% endif %}
-        </p>
-          <small class="mb-2 d-flex align-items-center text-muted">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-chat-fill me-2" viewBox="0 0 16 16">
-              <path d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9.06 9.06 0 0 0 8 15z"/>
-            </svg>
-            + {{discussion.popular}}
-          </small>
-        {% endfor %}
-      </div>
-    </div>
-
-{% if pagination and pagination.pages > 1 %}
-{{ macros.pagination_widget(pagination, '.index') }}
-{% endif %}
+  <article class="col-3">
+    <h6 class="mb-3">Топ активных пользователей</h6>
+    {{top_users.widget(popular_users, moment)}}
+    <h6 class="mb-3 mt-4">Часто используемые теги</h6>
+    {{tags.widget(popular_tags)}}
+    <h6 class="mb-3 mt-4">Новые главы</h6>
+    {{chapters.widget(new_chapters)}}
+  </article>
+</div>
 {% endblock %}

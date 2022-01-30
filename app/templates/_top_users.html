@@ -1,0 +1,16 @@
+{% macro widget(popular_users, moment) %}
+    {% for user in popular_users %}
+        <div class="mb-3 d-flex" >
+            <div>
+                <div class="avatar avatar-top-users me-2" style="background-image: url({{ user.avatar_url() }})">
+                </div>
+            </div>
+            <div class="d-flex row align-items-center">
+                <h6 class="card-title">
+                <a class="link-dark" href="{{ url_for('user.index', id = user.id) }}">{{ user.username }}</a>
+                </h6>
+                <small class="m-0">онлайн {{ moment(user.last_seen).fromNow() }}</small>
+            </div>
+        </div>
+    {% endfor %}
+{% endmacro %}

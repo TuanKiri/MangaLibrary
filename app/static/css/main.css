@@ -1,3 +1,30 @@
+.anime-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(174px, 1fr));
+  grid-gap: 1rem;
+}
+
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(306px, 1fr));
+  grid-gap: 1rem;
+}
+
+.tooltip-inner {
+  text-align: start;
+  background-color: #fff;
+  color: #000;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 12;
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tooltip-arrow::before {
+  display: none;
+}
+
 .chapter-delete {
   border-radius: 0px;
 }
@@ -18,8 +45,17 @@
   text-decoration: underline;
 }
 
+.card-title {
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .card-title a {
   text-decoration: none;
+  font-size: .9rem;
 }
 
 .card-title a:hover {
@@ -33,6 +69,26 @@
 
 .nav-link {
   color: #fff !important;
+}
+
+.poster {
+  background-position: center;
+  background-size: cover;
+}
+
+.news-poster {
+  height: 150px;
+  min-width: 282px;
+}
+
+.md-poster {
+  width: 174px;
+  height: 244px;
+}
+
+.sm-poster {
+  width: 65px;
+  height: 98px;
 }
 
 .avatar {
@@ -63,6 +119,11 @@
   border-radius: 4px;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
+}
+
+.avatar-top-users {
+  min-width: 50px;
+  min-height: 50px;
 }
 
 .background-user {

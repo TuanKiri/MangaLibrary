@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% import "_macros.html" as macros %}
+{% import "_pagination.html" as macros %}
+{% import "_manga.html" as manga %}
 
 {% block page_content %}
 <form class="d-flex" method="get">
@@ -7,11 +8,12 @@
     {{ search_form.submit(class_="btn btn-primary") }}
 </form>
 <h5 class="mb-3 mt-4">Вся манга</h5>
-   
-{% include '_manga.html' %}
+<div class="anime-grid">
+    {{manga.widget(pagination.items, current_user)}}
+</div>
 
 {% if pagination and pagination.pages > 1 %}
-{{ macros.pagination_widget(pagination, '.manga_list', search=search_form.search.data ) }}
+{{ macros.widget(pagination, '.manga_list', search=search_form.search.data ) }}
 {% endif %}
 
 {% endblock %}

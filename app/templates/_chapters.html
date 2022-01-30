@@ -1,0 +1,15 @@
+{% macro widget(new_chapter) %}
+    {% for c in new_chapter %}
+        <div class="mb-3 d-flex" >
+            <div>
+                <div class="poster sm-poster" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="right"
+                title="<b>{{ c.Manga.title }}</b> <p>{{c.Manga.catalog}}</p>" style="background-image: url({{ c.Manga.image_url() }})">
+                </div>
+            </div>
+            <div class="ms-2">
+                <h6 class="card-title"><a class="link-dark" href="{{ url_for('manga.index', id=c.Manga.id) }}">{{ c.Manga.title }}</a></h6>
+                <p class="mb-0">Том {{c.Chapter.volume}} Глава {{c.Chapter.chapter}}</p>
+            </div>
+        </div>
+    {% endfor %}
+{% endmacro %}

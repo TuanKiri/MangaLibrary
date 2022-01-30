@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% import "_macros.html" as macros %}
+{% import "_pagination.html" as macros %}
 
 {% block page_content %}
 <form class="d-flex" method="get">
@@ -11,7 +11,7 @@
 {% include '_users.html' %}
 
 {% if pagination and pagination.pages > 1 %}
-{{ macros.pagination_widget(pagination, '.users_list', search=search_form.search.data) }}
+{{ macros.widget(pagination, '.users_list', search=search_form.search.data) }}
 {% endif %}
 
 {% endblock %}

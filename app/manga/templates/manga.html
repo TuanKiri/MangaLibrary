@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% import "_macros.html" as macros %}
+{% import "_pagination.html" as macros %}
 
 {% block page_content %}
 <div class="d-flex">
@@ -72,6 +72,6 @@
         {% include '_comments.html' %}
 
         {% if pagination and pagination.pages > 1 %}
-        {{ macros.pagination_widget(pagination, '.index', id=manga.id) }}
+        {{ macros.widget(pagination, '.index', id=manga.id) }}
         {% endif %}
 {% endblock %}

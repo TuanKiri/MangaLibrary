@@ -1,23 +1,17 @@
-<table class="table table-borderless">
-    {% for item in pagination.items %}
-      <tbody>
-        <tr class="d-flex">
-            <td class="ps-0">        
-                <img src="{{ item.image_url() }}" style="width: 150px" class="" alt="...">
-            </td>
-            <td>
-                <div class="card-body pt-0">
-                    <h6 class="card-title"><a class="link-dark" href="{{ url_for('manga.index', id = item.id) }}">{{ item.title }}</a></h6>
-                    <p class="card-text">{{ item.catalog }}</p>
-                    {% if item.tags.count() %}
-                        {% for tag in item.tags %}
-                            <a type="button" href="{{ url_for('manga.tag', id = tag.id) }}" class="btn btn-light mb-2">{{ tag.name }}</a>
-                        {% endfor %}
-                    {% endif %}
-                    <p class="card-text"><small class="text-muted">Обновлено: {{ moment(item.timestamp).fromNow() }}</small></p>
-                </div>
-            </td>
-            {% endfor %}
-        </tr>
-      </tbody>
-</table>
+{% macro widget(manga, current_user) %}
+  {% for item in manga %}
+    <div class="mb-2">
+      <div class="d-flex flex-column justify-content-center" >
+        <div class="p-0 position-relative poster md-poster" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="right"
+            title="<b>{{ item.title }}</b> <p>{{item.catalog}}</p>" style="background-image: url({{ item.image_url() }})">
+          {% if current_user.is_reading(item) %}
+            <div class="position-absolute bottom-0 start-0 px-4 mb-2 rounded-end" style="background-color: #00e676; color: #Fff" >
+              Читаю
+            </div>
+          {% endif %}
+        </div>
+        <h6 class="card-title mt-2"><a class="link-dark" href="{{ url_for('manga.index', id = item.id) }}">{{ item.title }}</a></h6>
+      </div>
+    </div>
+  {% endfor %}
+{% endmacro %}
