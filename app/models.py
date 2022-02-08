@@ -284,7 +284,6 @@ class Manga(db.Model):
 
     @tags_string.setter
     def tags_string(self, value):
-        print(value)
         self.tags = []
         tags_list = [tag.strip() for tag in value.split(',') if len(tag.strip()) > 0]
         if len(tags_list) > 0:
@@ -343,6 +342,25 @@ class Tag(db.Model):
                             backref=db.backref('tags', lazy='dynamic'),
                             lazy='dynamic')
     
+    @staticmethod
+    def insert_tags():
+        names = [
+            "Сёнен", "Сёнен-ай", "Сэйнэн", "Сёдзе", "Сёдзе-ай", "Дзёсей", "Комедия", "Романтика", "Школа",
+            "Безумие", "Боевые искусства", "Вампиры", "Военное", "Гарем", "Гурман", "Демоны", "Детектив",
+            "Детское", "Драма", "Игры", "Исторический", "Космос", "Магия", "Машины", "Меха", "Музыка", "Пародия",
+            "Повседневность", "Полиция", "Приключения", "Психологическое", "Работа", "Самураи", "Сверхъестественное",
+            "Смена пола", "Спорт", "Супер сила", "Ужасы", "Фантастика", "Фэнтези", "Экшен", "Этти", "Триллер", "Эротика",
+            "Хентай", "Яой", "Юри", "Додзинси"
+        ]
+        
+        for name in names:
+            search = Tag.query.filter(Tag.name.ilike(name)).first()
+            if search is None:
+                tag = Tag(name=name)
+                db.session.add(tag)
+        db.session.commit()
+        
+
     def __repr__(self):
         return u'Tag: %r' % self.id
 

@@ -79,7 +79,6 @@ def follow(id):
         return redirect(url_for('.index', id=manga.id))
     current_user.read(manga)
     db.session.commit()
-    flash('Вы теперь подписаны на %s.' % manga.title, 'success')
     return redirect(url_for('.index', id=manga.id))
 
 
@@ -93,7 +92,6 @@ def unfollow(id):
         return redirect(url_for('.index', id=manga.id))
     current_user.unread(manga)
     db.session.commit()
-    flash('Вы больше не подписаны на %s.' % manga.title, 'success')
     return redirect(url_for('.index', id=manga.id))
 
 

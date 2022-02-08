@@ -24,7 +24,7 @@ def index():
                                 .join(manga_tag) \
                                 .group_by(Tag) \
                                 .order_by(db.text('popular DESC')) \
-                                .limit(44).from_self(Tag)
+                                .limit(48).from_self(Tag)
     new_chapters = db.session.query(Manga, Chapter, db.func.max(Chapter.timestamp).label('timestamp')) \
                                 .join(Chapter) \
                                 .group_by(Manga.id, Chapter.id) \

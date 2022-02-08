@@ -20,7 +20,6 @@ def add_manga_comment(id):
             body=comment_form.comment.data)
         db.session.add(comment)
         db.session.commit()
-        flash('Комментарий добавлен', 'success')
     return redirect(url_for('manga.index', id=manga.id))
 
 @comment.route('/add_news_comment/<int:id>', methods=['GET', 'POST'])
@@ -36,7 +35,6 @@ def add_news_comment(id):
             body=comment_form.comment.data)
         db.session.add(comment)
         db.session.commit()
-        flash('Комментарий добавлен', 'success')
     return redirect(url_for('news.index', id=news.id))
 
 @comment.route('/moderate')

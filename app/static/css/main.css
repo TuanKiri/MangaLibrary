@@ -55,7 +55,7 @@
 
 .card-title a {
   text-decoration: none;
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
 
 .card-title a:hover {
@@ -79,6 +79,11 @@
 .news-poster {
   height: 150px;
   min-width: 282px;
+}
+
+.lg-poster {
+  width: 250px;
+  height: 350px;
 }
 
 .md-poster {
@@ -185,4 +190,49 @@
 .btn-manga-subscribe:hover {
   background-color: #039be5;
   color: #fff;
+}
+
+.btn-manga-unsubscribe {
+  background-color: #ff5252;
+  color: #fff;
+}
+
+.btn-manga-unsubscribe:hover {
+  background-color: #ff1744;
+  color: #fff;
+}
+
+.text-hidden {
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tag-hidden {
+  display: none;
+}
+
+.btn-more {
+  display: none;
+  background-color: #fff;
+  color: #29b6f6;
+}
+
+.btn-more:hover {
+  background-color: #e1f5fe;
+  color: #29b6f6;
+}
+
+.more-tags {
+  display: none;
+}
+
+h6 .link-dark {
+  text-decoration: none;
+}
+
+h6 .link-dark:hover {
+  text-decoration: underline;
 }

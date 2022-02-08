@@ -1,77 +1,133 @@
 {% extends "base.html" %}
+{% import "_tags.html" as tags %} 
 {% import "_pagination.html" as macros %}
 
 {% block page_content %}
 <div class="d-flex">
-    <div class="container ps-0 d-flex flex-column" style="width: 250px;">
-        <img src="{{ manga.image_url() }}" alt="...">
-        {% if current_user.is_authenticated and current_user.can(Permission.FOLLOW) %}
-            {% if not current_user.is_reading(manga) %}
-                <a href="{{ url_for('.follow', id = manga.id) }}"  type="button" class="btn btn-manga-subscribe mt-2">
-                    Начать читать
+    <div class="flex-shrink-0">
+        <div class="poster lg-poster" style="background-image: url({{ manga.image_url() }})">
+        </div>
+        {% if current_user.is_authenticated %}
+            {% if current_user.is_reading(manga) %}
+                <a href="{{ url_for('.unfollow', id = manga.id) }}" type="button" class="btn btn-edit mt-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-fill" viewBox="0 0 16 16">
+                        <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/>
+                    </svg>
                 </a>
             {% else %}
-                <a href="{{ url_for('.unfollow', id = manga.id) }}" type="button" class="btn btn-danger mt-2">Перестать читать</a>
+                <a href="{{ url_for('.follow', id = manga.id) }}"  type="button" class="btn btn-manga-subscribe mt-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-fill" viewBox="0 0 16 16">
+                        <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/>
+                    </svg>
+                </a>
             {% endif %}
         {% endif %}
     </div>
-    <div class="card-body p-0">
-        <h5 class="card-title">{{ manga.title }}</h5>
-        <p class="card-text">{{ manga.catalog }}</p>
-        {% if manga.tags.count() %}
-            {% for tag in manga.tags %}
-                <a type="button" href="{{ url_for('manga.tag', id = tag.id) }}" class="btn btn-light mb-2">{{ tag.name }}</a>
-            {% endfor %}
-        {% endif %}
-        {% if manga.author %}
-            <p class="card-text"><small class="text-muted">Автор: {{ manga.author }}</small></p>
-        {% endif %}
-        <p class="card-text"><small class="text-muted">Обновлено: {{ moment(manga.timestamp).fromNow() }}</small></p>
-        {% if manga.user.id %}
-            <p class="card-text"><small class="text-muted">Обновил: <a href="{{ url_for('user.index', id = manga.user.id) }}">{{ manga.user.username }}</a></small></p>
-        {% endif %}
-        <p class="card-text"><small class="text-muted">Читают: {{ manga.users.count() }}</small></p>
-        {% if current_user.is_authenticated and current_user.can(Permission.PUBLICATION) %}
-            <div class="d-flex my-2 justify-content-center">
-                <a  type="button" href="{{ url_for('.edit', id = manga.id) }}" class="btn btn-primary mt-2">Редактировать</a>
+    <div class="ms-2">
+        <div style="margin-left: 12px;" >
+            <h6 class="card-title">{{ manga.title }}</h6>
+            <div class="catalog">
+                {{ manga.catalog }}
             </div>
-        {% endif %}
-        {% if manga.chapter.count() %}
-        <h6>Главы:</h6>
-        {% endif %}
-            {% for chapter in manga.chapter.all() %}
-                <div class="d-flex mb-1">
-                    <a href="{{ url_for('manga.chapter', id = manga.id, volume = chapter.volume, chapter = chapter.chapter) }}" type="button" class="list-group-item list-group-item-action">
-                        Том {{ chapter.volume }} Глава {{ chapter.chapter }} {{ chapter.title}} 
-                    </a>
-                    {% if current_user.is_authenticated and current_user.can(Permission.PUBLICATION) %}
-                    <a href="{{ url_for('manga.delete_chapter', id = manga.id, volume = chapter.volume, chapter = chapter.chapter) }}" type="button" class="btn btn-danger chapter-delete">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
-                            <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
-                        </svg>
-                    </a>
-                    {% endif %}
-                </div>
-            {% endfor %}
-        {% if current_user.is_authenticated and current_user.can(Permission.PUBLICATION) %}
-            <div class="d-flex mt-2 justify-content-center">
-                <a  type="button" href="{{ url_for('manga.add_chapter', id = manga.id) }}" class="btn btn-primary mt-2">Добавить главу</a>
+        </div>
+        <input class="mt-1 btn btn-more" type="button" value="Развернуть">
+        <div class="my-2" style="margin-left: 12px;">
+            <div class="tags" style="display: inline;">
+                {{tags.widget(manga.tags.all())}}
             </div>
-        {% endif %}
-        <h6 class="mb-3 mt-4">Комментарии:</h6>
-        {% if current_user.is_authenticated and current_user.can(Permission.COMMENT)%}
+            <a type="button" class="more-tags btn btn-light mb-2">→</a>
+        </div>
+        <div style="margin-left: 12px;">
+            <h6 class="mb-3">Комментарии:</h6>
+            {% if current_user.is_authenticated and current_user.can(Permission.COMMENT)%}
             <form action="{{ url_for('comment.add_manga_comment', id=manga.id) }}" method="post">
                 {{ comment_form.hidden_tag() }}
                 {{ comment_form.comment(class_="form-control", placeholder="Комментарий") }}
-                <div class="d-flex justify-content-end my-2">
-                    {{ comment_form.submit(class_="btn btn-primary px-3") }}
+                <div class="d-flex justify-content-end mt-3">
+                    {{ comment_form.submit(class_="btn btn-primary") }}
                 </div>
             </form>
-        {% endif %}
-        {% include '_comments.html' %}
+            {% endif %}
+            {% for item in pagination.items %}
+                <div class="d-flex align-items-start my-4">
+                    <div class="avatar avatar-small me-2" style="background-image: url({{ item.user.avatar_url() }}) ">
+                    </div>
+                    <div class="d-flex flex-column flex-fill">
+                        <div class="d-flex justify-content-between align-items-center"> 
+                            <h6 class="mb-0"><a class="link-dark" href="{{ url_for('user.index', id = item.user.id) }}">
+                                {{ item.user.username }}</a>
+                            </h6>
+                            <small class="text-muted">{{ moment(item.timestamp).format('L') }}</small>
+                        </div>
+                        <div data-id="{{item.id}}">
+                            {% if item.disabled or item.user.banned %}
+                                <i>Данный комментарий был заблокирован модератором.</i>
+                            {% endif %}
+                            {% if moderate or not item.disabled and not item.user.banned %}
+                                {{ item.body }}
+                            {% endif %}
+                        </div>
+                        <div>
+                            <input class="mt-1 btn btn-more" style="display: inline;" onclick="countRabbits()" type="button" value="Развернуть">
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="d-flex justify-content-center">
+            {{ macros.widget(pagination, '.index', id = manga.id)}}
+        </div>
+    </div>
+</div>
 
-        {% if pagination and pagination.pages > 1 %}
-        {{ macros.widget(pagination, '.index', id=manga.id) }}
-        {% endif %}
+<script>
+    function countRabbits() {
+        for(let i=1; i<=3; i++) {
+          alert("Кролик номер " + i);
+        }
+      }
+
+    let catalog = document.querySelector('.catalog');
+    let more = document.querySelector('.btn-more');
+    let tags = document.querySelector('.tags')
+    let more_tags = document.querySelector('.more-tags')
+
+    if (tags.children.length > 4) {
+        for (var i = 4; i < tags.children.length; i++) {
+            tags.children[i].classList.add('tag-hidden')
+        }
+        more_tags.style.cssText = `
+            display: inline-block;
+        `;
+        tags.classList.add('tags-hidden');
+    }
+
+    more_tags.onclick = function() {
+        tags.classList.toggle('tags-hidden');
+        if(tags.classList.contains('tags-hidden')) { 
+            more_tags.innerHTML = "→"
+            for (var i = 4; i < tags.children.length; i++) {
+                tags.children[i].classList.add('tag-hidden')
+            } 
+        } else {
+            more_tags.innerHTML = "←"
+            for (var i = 4; i < tags.children.length; i++) {
+                tags.children[i].classList.remove('tag-hidden')
+            }
+        }
+            
+    };
+    
+    if (catalog.textContent.length > 378) {
+        catalog.classList.add('text-hidden')
+        more.style.cssText = `
+            display: inline-block;
+        `;
+    }
+    
+    more.onclick = function() {
+        catalog.classList.toggle('text-hidden');
+        catalog.classList.contains('text-hidden') ? more.innerHTML = "Развернуть" : more.innerHTML = "Свернуть"
+    };
+</script>
 {% endblock %}
